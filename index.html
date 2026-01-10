@@ -39,6 +39,7 @@
       <button onclick="showSection('coding', event)">Кодинг</button>
       <button onclick="showSection('goals', event)">Цели</button>
       <button onclick="showSection('vision', event)">Карта</button>
+      <button onclick="showSection('weight', event)">Вес</button>
       <button onclick="showSection('psych-test', event)">Тест</button>
       <button onclick="showSection('personal-code', event)">Кодекс</button>
     </nav>
@@ -372,6 +373,159 @@
 
     <div class="vision-grid" id="visionGrid">
       <!-- Vision cards will be rendered here -->
+    </div>
+  </section>
+
+  <!-- ========== WEIGHT TRACKER SECTION ========== -->
+  <section id="weight" class="section" style="display:none;">
+    <h2>[WEIGHT_SYS] МОНИТОРИНГ ВЕСА</h2>
+
+    <div class="weight-container">
+      <!-- Stats Cards -->
+      <div class="weight-stats-grid">
+        <!-- Current Weight -->
+        <div class="weight-stat-card">
+          <div class="weight-stat-label">ТЕКУЩИЙ ВЕС</div>
+          <div class="weight-stat-value" id="currentWeight">--</div>
+          <div class="weight-stat-unit">кг</div>
+        </div>
+
+        <!-- Starting Weight -->
+        <div class="weight-stat-card">
+          <div class="weight-stat-label">НАЧАЛЬНЫЙ</div>
+          <div class="weight-stat-value" id="startingWeight">--</div>
+          <div class="weight-stat-unit">кг</div>
+        </div>
+
+        <!-- Goal Weight -->
+        <div class="weight-stat-card">
+          <div class="weight-stat-label">ЦЕЛЬ</div>
+          <div class="weight-stat-value" id="goalWeight">--</div>
+          <div class="weight-stat-unit">кг</div>
+        </div>
+
+        <!-- Change -->
+        <div class="weight-stat-card">
+          <div class="weight-stat-label">ИЗМЕНЕНИЕ</div>
+          <div class="weight-stat-value" id="weightChange" style="font-size: 32px;">--</div>
+          <div class="weight-stat-unit">кг</div>
+        </div>
+      </div>
+
+      <!-- Add Weight Form -->
+      <div class="card" style="margin-top: 24px;">
+        <h3>Добавить измерение</h3>
+        <form id="weightForm" style="display: flex; gap: 16px; align-items: end; flex-wrap: wrap; margin-top: 16px;">
+          <div style="flex: 1; min-width: 150px;">
+            <label style="display: block; font-size: 12px; color: var(--nexus-text-dim); margin-bottom: 8px;">
+              ДАТА
+            </label>
+            <input type="date" id="weightDate" required style="
+              width: 100%;
+              background: var(--nexus-surface);
+              border: 1px solid var(--nexus-border);
+              border-radius: var(--radius-sm);
+              padding: 10px 12px;
+              color: var(--nexus-text);
+              font-family: var(--font-mono);
+              font-size: 13px;
+            ">
+          </div>
+
+          <div style="flex: 1; min-width: 150px;">
+            <label style="display: block; font-size: 12px; color: var(--nexus-text-dim); margin-bottom: 8px;">
+              ВЕС (КГ)
+            </label>
+            <input type="number" step="0.1" id="weightValue" placeholder="70.5" required style="
+              width: 100%;
+              background: var(--nexus-surface);
+              border: 1px solid var(--nexus-border);
+              border-radius: var(--radius-sm);
+              padding: 10px 12px;
+              color: var(--nexus-text);
+              font-family: var(--font-mono);
+              font-size: 13px;
+            ">
+          </div>
+
+          <div style="flex: 1; min-width: 200px;">
+            <label style="display: block; font-size: 12px; color: var(--nexus-text-dim); margin-bottom: 8px;">
+              ЗАМЕТКА (опционально)
+            </label>
+            <input type="text" id="weightNote" placeholder="После тренировки" style="
+              width: 100%;
+              background: var(--nexus-surface);
+              border: 1px solid var(--nexus-border);
+              border-radius: var(--radius-sm);
+              padding: 10px 12px;
+              color: var(--nexus-text);
+              font-family: var(--font-mono);
+              font-size: 13px;
+            ">
+          </div>
+
+          <button type="button" onclick="addWeight()" style="flex: 0 0 auto;">
+            📊 ДОБАВИТЬ
+          </button>
+        </form>
+      </div>
+
+      <!-- Goal Setting -->
+      <div class="card" style="margin-top: 24px;">
+        <h3>Целевой вес</h3>
+        <div style="display: flex; gap: 16px; align-items: end; margin-top: 16px;">
+          <div style="flex: 1;">
+            <label style="display: block; font-size: 12px; color: var(--nexus-text-dim); margin-bottom: 8px;">
+              ЦЕЛЬ (КГ)
+            </label>
+            <input type="number" step="0.1" id="goalWeightInput" placeholder="65.0" style="
+              width: 100%;
+              background: var(--nexus-surface);
+              border: 1px solid var(--nexus-border);
+              border-radius: var(--radius-sm);
+              padding: 10px 12px;
+              color: var(--nexus-text);
+              font-family: var(--font-mono);
+              font-size: 13px;
+            ">
+          </div>
+          <button type="button" onclick="setWeightGoal()" style="flex: 0 0 auto;">
+            🎯 УСТАНОВИТЬ ЦЕЛЬ
+          </button>
+        </div>
+
+        <div id="goalProgress" style="margin-top: 16px; display: none;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span style="font-size: 12px; color: var(--nexus-text-dim);">ПРОГРЕСС К ЦЕЛИ</span>
+            <span style="font-size: 14px; color: var(--nexus-green); font-weight: 700;" id="goalProgressPercent">0%</span>
+          </div>
+          <div style="background: var(--nexus-surface); height: 20px; border-radius: 10px; overflow: hidden; border: 1px solid var(--nexus-border);">
+            <div id="goalProgressBar" style="height: 100%; background: var(--nexus-green); width: 0%; transition: width 0.5s;"></div>
+          </div>
+          <div style="font-size: 11px; color: var(--nexus-text-dim); margin-top: 8px;" id="goalProgressText"></div>
+        </div>
+      </div>
+
+      <!-- Chart -->
+      <div class="card" style="margin-top: 24px;">
+        <h3>График веса</h3>
+        <div id="weightChart" style="margin-top: 16px; min-height: 300px;">
+          <!-- Chart will be rendered here -->
+        </div>
+      </div>
+
+      <!-- History -->
+      <div class="card" style="margin-top: 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <h3>История измерений</h3>
+          <button onclick="clearWeightHistory()" style="padding: 6px 12px; font-size: 11px; background: var(--nexus-surface); border: 1px solid var(--nexus-border);">
+            🗑️ ОЧИСТИТЬ
+          </button>
+        </div>
+        <div id="weightHistory">
+          <!-- History will be rendered here -->
+        </div>
+      </div>
     </div>
   </section>
 
@@ -718,6 +872,7 @@
   <script src="js/stats.js"></script>
   <script src="js/personal-code.js"></script>
   <script src="js/phq15.js"></script>
+  <script src="js/weight.js"></script>
   <script src="js/app.js"></script>
 
 </body>
