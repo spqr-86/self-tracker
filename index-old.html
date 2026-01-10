@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Self-Tracker - приложение для отслеживания тренировок, медитации, целей и достижений">
+  <title>Self-Tracker - Трекер саморазвития</title>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/styles.css">
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+</head>
+
+<body>
+
+<div class="app">
+  <!-- Navigation -->
+  <nav role="navigation" aria-label="Основная навигация">
+    <button class="active" onclick="showSection('workouts', event)" aria-label="Перейти к разделу тренировок">
+      🏋️ Тренировки
+    </button>
+    <button onclick="showSection('meditation', event)" aria-label="Перейти к разделу медитации">
+      🧘 Медитация
+    </button>
+    <button onclick="showSection('code', event)" aria-label="Перейти к кодексу">
+      📜 Кодекс
+    </button>
+    <button onclick="showSection('goals', event)" aria-label="Перейти к целям">
+      🎯 Цели
+    </button>
+    <button onclick="showSection('motivation', event)" aria-label="Перейти к мотивации">
+      🔥 Мотивация
+    </button>
+    <button onclick="showSection('workout-program', event)" aria-label="Перейти к программе тренировок">
+      📅 Программа
+    </button>
+    <button onclick="showSection('psych-test', event)" aria-label="Перейти к психологическому тесту">
+      🧠 Тест
+    </button>
+    <button onclick="showSection('vision-board', event)" aria-label="Перейти к карте желаний">
+      ✨ Карта желаний
+    </button>
+
+    <hr>
+
+    <button onclick="exportData()" class="secondary" aria-label="Экспортировать данные">
+      ⬇️ Экспорт
+    </button>
+    <button onclick="importData()" class="secondary" aria-label="Импортировать данные">
+      ⬆️ Импорт
+    </button>
+  </nav>
+
+  <!-- Main Content -->
+  <main role="main">
+
+    <!-- ================= WORKOUTS ================= -->
+    <section id="workouts" class="section" aria-labelledby="workouts-heading">
+      <h2 id="workouts-heading">🏋️ Тренировки <span style="color: #4caf50; font-size: 14px; background: #e8f5e9; padding: 4px 12px; border-radius: 4px; margin-left: 12px;">v2.1 - ОБНОВЛЕНО ✓</span></h2>
+
+      <div class="card">
+        <h3>Добавить тренировку</h3>
+        <form id="workoutForm" onsubmit="event.preventDefault(); addWorkout();">
+          <label for="wDate">Дата</label>
+          <input type="date" id="wDate" required aria-required="true">
+
+          <label for="wExercise">Упражнение</label>
+          <input type="text" placeholder="Например: Жим лёжа" id="wExercise" required aria-required="true">
+
+          <label for="wSets">Подходы</label>
+          <input type="number" placeholder="3" id="wSets" min="0">
+
+          <label for="wReps">Повторения</label>
+          <input type="number" placeholder="10" id="wReps" min="0">
+
+          <label for="wWeight">Вес (кг)</label>
+          <input type="number" placeholder="50" id="wWeight" min="0" step="0.5">
+
+          <button type="submit">Сохранить</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h3>История тренировок</h3>
+        <ul id="workoutList" aria-live="polite"></ul>
+      </div>
+
+      <div class="card">
+        <h3>График прогресса</h3>
+        <div class="chart-container">
+          <canvas id="workoutChart" aria-label="График прогресса тренировок"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= MEDITATION ================= -->
+    <section id="meditation" class="section" style="display:none" aria-labelledby="meditation-heading">
+      <h2 id="meditation-heading">🧘 Медитация</h2>
+
+      <div class="card">
+        <h3>Добавить сеанс медитации</h3>
+        <form id="meditationForm" onsubmit="event.preventDefault(); addMeditation();">
+          <label for="mDate">Дата</label>
+          <input type="date" id="mDate" required aria-required="true">
+
+          <label for="mMinutes">Минуты</label>
+          <input type="number" placeholder="10" id="mMinutes" min="1" required aria-required="true">
+
+          <label for="mType">Тип практики</label>
+          <input type="text" placeholder="Например: Випассана" id="mType">
+
+          <label for="mNotes">Заметки</label>
+          <textarea placeholder="Как прошла медитация?" id="mNotes"></textarea>
+
+          <button type="submit">Сохранить</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h3>Статистика</h3>
+        <div id="meditationStats" aria-live="polite"></div>
+      </div>
+
+      <div class="card">
+        <h3>История медитаций</h3>
+        <ul id="meditationList" aria-live="polite"></ul>
+      </div>
+    </section>
+
+    <!-- ================= CODEX ================= -->
+    <section id="code" class="section" style="display:none" aria-labelledby="code-heading">
+      <h2 id="code-heading">📜 Мой Кодекс</h2>
+
+      <div class="card">
+        <h3>Добавить принцип</h3>
+        <form id="codeForm" onsubmit="event.preventDefault(); addCode();">
+          <label for="codeText">Принцип</label>
+          <input type="text" placeholder="Например: Не откладывать на завтра" id="codeText" required aria-required="true">
+
+          <label for="codeCategory">Категория</label>
+          <select id="codeCategory">
+            <option>Работа</option>
+            <option>Отношения</option>
+            <option>Здоровье</option>
+            <option>Финансы</option>
+            <option>Личное развитие</option>
+          </select>
+
+          <button type="submit">Добавить</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h3>Мои принципы</h3>
+        <ul id="codeList" aria-live="polite"></ul>
+      </div>
+    </section>
+
+    <!-- ================= GOALS ================= -->
+    <section id="goals" class="section" style="display:none" aria-labelledby="goals-heading">
+      <h2 id="goals-heading">🎯 Цели</h2>
+
+      <div class="card">
+        <h3>Добавить цель</h3>
+        <form id="goalForm" onsubmit="event.preventDefault(); addGoal();">
+          <label for="gName">Название цели</label>
+          <input type="text" placeholder="Например: Пробежать марафон" id="gName" required aria-required="true">
+
+          <label for="gType">Тип</label>
+          <select id="gType">
+            <option>Краткосрочная</option>
+            <option>Долгосрочная</option>
+          </select>
+
+          <label for="gDeadline">Дедлайн (необязательно)</label>
+          <input type="date" id="gDeadline">
+
+          <label for="gProgress">Прогресс (%)</label>
+          <input type="number" placeholder="0" id="gProgress" min="0" max="100" value="0">
+
+          <button type="submit">Добавить</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h3>Мои цели</h3>
+        <ul id="goalList" aria-live="polite"></ul>
+      </div>
+    </section>
+
+    <!-- ================= MOTIVATION ================= -->
+    <section id="motivation" class="section" style="display:none" aria-labelledby="motivation-heading">
+      <h2 id="motivation-heading">🔥 Мотивация</h2>
+
+      <div id="randomQuote" class="card quote-card" aria-live="polite"></div>
+
+      <div class="card">
+        <h3>Добавить достижение</h3>
+        <form id="achievementForm" onsubmit="event.preventDefault(); addAchievement();">
+          <label for="aText">Достижение</label>
+          <input type="text" placeholder="Например: Выполнил 100 отжиманий" id="aText" required aria-required="true">
+
+          <button type="submit">Добавить</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h3>Мои достижения</h3>
+        <ul id="achievementList" aria-live="polite"></ul>
+      </div>
+    </section>
+
+    <!-- ================= WORKOUT PROGRAM ================= -->
+    <section id="workout-program" class="section" style="display:none" aria-labelledby="program-heading">
+      <h2 id="program-heading">📅 Программа тренировок</h2>
+
+      <div class="card">
+        <h3>Вторник</h3>
+        <ul id="programTuesday" aria-live="polite"></ul>
+      </div>
+
+      <div class="card">
+        <h3>Четверг</h3>
+        <ul id="programThursday" aria-live="polite"></ul>
+      </div>
+
+      <div class="card">
+        <h3>Суббота</h3>
+        <ul id="programSaturday" aria-live="polite"></ul>
+      </div>
+
+      <div class="card">
+        <h3>Добавить упражнение в программу</h3>
+        <form id="programForm" onsubmit="event.preventDefault(); addProgramExercise();">
+          <label for="pDay">День недели</label>
+          <select id="pDay" required aria-required="true">
+            <option value="Вторник">Вторник</option>
+            <option value="Четверг">Четверг</option>
+            <option value="Суббота">Суббота</option>
+          </select>
+
+          <label for="pExercise">Упражнение</label>
+          <input type="text" placeholder="Например: Приседания со штангой" id="pExercise" required aria-required="true">
+
+          <label for="pSets">Подходы</label>
+          <input type="number" placeholder="3" id="pSets" min="1" required aria-required="true">
+
+          <label for="pReps">Повторения</label>
+          <input type="number" placeholder="10" id="pReps" min="1" required aria-required="true">
+
+          <label for="pWeight">Вес (кг)</label>
+          <input type="number" placeholder="50" id="pWeight" min="0" step="0.5" required aria-required="true">
+
+          <label for="pVideo">YouTube ссылка</label>
+          <input type="url" placeholder="https://youtube.com/watch?v=..." id="pVideo">
+
+          <button type="submit">Добавить в программу</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ================= PSYCHOLOGICAL TEST ================= -->
+    <section id="psych-test" class="section" style="display:none" aria-labelledby="test-heading">
+      <h2 id="test-heading">🧠 Психологический тест</h2>
+
+      <div class="card">
+        <h3>Тест на депрессию (PHQ-15)</h3>
+        <p style="color: var(--muted); font-size: 14px; margin-bottom: 20px;">
+          Оцените, насколько часто за последние 2 недели вас беспокоили следующие симптомы:<br>
+          <strong>0</strong> - Ни разу | <strong>1</strong> - Иногда | <strong>2</strong> - Умеренно | <strong>3</strong> - Часто
+        </p>
+
+        <form id="depressionTestForm" onsubmit="event.preventDefault(); calculateTestResult();">
+          <div class="test-questions">
+            <div class="test-question">
+              <label>1. Грусть: вам грустно или вы в плохом настроении?</label>
+              <div class="test-options">
+                <label><input type="radio" name="q1" value="0" required> 0</label>
+                <label><input type="radio" name="q1" value="1"> 1</label>
+                <label><input type="radio" name="q1" value="2"> 2</label>
+                <label><input type="radio" name="q1" value="3"> 3</label>
+              </div>
+            </div>
+
+            <div class="test-question">
+              <label>2. Уныние: вы испытываете чувство безнадежности?</label>
+              <div class="test-options">
+                <label><input type="radio" name="q2" value="0" required> 0</label>
+                <label><input type="radio" name="q2" value="1"> 1</label>
+                <label><input type="radio" name="q2" value="2"> 2</label>
+                <label><input type="radio" name="q2" value="3"> 3</label>
+              </div>
+            </div>
+
+            <div class="test-question">
+              <label>3. Низкая самооценка: вы испытываете чувство собственной ничтожности и непригодности?</label>
+              <div class="test-options">
+                <label><input type="radio" name="q3" value="0" required> 0</label>
+                <label><input type="radio" name="q3" value="1"> 1</label>
+                <label><input type="radio" name="q3" value="2"> 2</label>
+                <label><input type="radio" name="q3" value="3"> 3</label>
+              </div>
+            </div>
+
+            <div class="test-question">
+              <label>4. Неполноценность: вы думаете, что вы хуже других?</label>
+              <div class="test-options">
+                <label><input type="radio" name="q4" value="0" required> 0</label>
+                <label><input type="radio" name="q4" value="1"> 1</label>
+                <label><input type="radio" name="q4" value="2"> 2</label>
+                <label><input type="radio" name="q4" value="3"> 3</label>
+              </div>
+            </div>
+
+            <div class="test-question">
+              <label>5. Вина: вы критикуете и обвиняете самого себя?</label>
+              <div class="test-options">
+                <label><input type="radio" name="q5" value="0" required> 0</label>
+                <label><input type="radio" name="q5" value="1"> 1</label>
+                <label><input type="radio" name="q5" value="2"> 2</label>
+                <label><input type="radio" name="q5" value="3"> 3</label>
+              </div>
+            </div>
+
+            <div class="test-question">
+              <label>6. Нерешительность: вы испытываете трудности с принятием решений?</label>
+              <div class="test-options">
+                <label><input type="radio" name="q6" value="0" required> 0</label>
+                <label><input type="radio" name="q6" value="1"> 1</label>
+                <label><input type="radio" name="q6" value="2"> 2</label>
+                <label><input type="radio" name="q6" value="3"> 3</label>
+              </div>
+            </div>
+
+            <div class="test-question">
+              <label>7. Раздражительность: вы испытывали досаду или злость в течение долгого периода времени?</label>
+              <div class="test-options">
+                <label><input type="radio" name="q7" value="0" required> 0</label>
+                <label><input type="radio" name="q7" value="1"> 1</label>
+                <label><input type="radio" name="q7" value="2"> 2</label>
+                <label><input type="radio" name="q7" value="3"> 3</label>
+              </div>
+            </div>
+
+            <div class="test-question">
+              <label>8. Потеря интереса к жизни: вы чувствуете потерю интереса к своей карьере, увлечениям, членам семьи и друзьям?</label>
+              <div class="test-options">
+                <label><input type="radio" name="q8" value="0" required> 0</label>
+                <label><input type="radio" name="q8" value="1"> 1</label>
+                <label><input type="radio" name="q8" value="2"> 2</label>
+                <label><input type="radio" name="q8" value="3"> 3</label>
+              </div>
+            </div>
+
+            <div class="test-question">
+              <label>9. Потеря мотивации: вам приходится заставлять себя заниматься делами?</label>
+              <div class="test-options">
+                <label><input type="radio" name="q9" value="0" required> 0</label>
+                <label><input type="radio" name="q9" value="1"> 1</label>
+                <label><input type="radio" name="q9" value="2"> 2</label>
+                <label><input type="radio" name="q9" value="3"> 3</label>
+              </div>
+            </div>
+
+            <div class="test-question">
+              <label>10. Самовосприятие: вам кажется, что вы постарели или выглядите непривлекательно?</label>
+              <div class="test-options">
+                <label><input type="radio" name="q10" value="0" required> 0</label>
+                <label><input type="radio" name="q10" value="1"> 1</label>
+                <label><input type="radio" name="q10" value="2"> 2</label>
+                <label><input type="radio" name="q10" value="3"> 3</label>
+              </div>
+            </div>
+
+            <div class="test-question">
+              <label>11. Изменения аппетита: вы имеете сниженный или, наоборот, повышенный аппетит (или злоупотребляете алкоголем)?</label>
+              <div class="test-options">
+                <label><input type="radio" name="q11" value="0" required> 0</label>
+                <label><input type="radio" name="q11" value="1"> 1</label>
+                <label><input type="radio" name="q11" value="2"> 2</label>
+                <label><input type="radio" name="q11" value="3"> 3</label>
+              </div>
+            </div>
+
+            <div class="test-question">
+              <label>12. Изменения в характере сна: вы испытываете затруднения со сном или постоянно крайне утомлены и слишком много спите?</label>
+              <div class="test-options">
+                <label><input type="radio" name="q12" value="0" required> 0</label>
+                <label><input type="radio" name="q12" value="1"> 1</label>
+                <label><input type="radio" name="q12" value="2"> 2</label>
+                <label><input type="radio" name="q12" value="3"> 3</label>
+              </div>
+            </div>
+
+            <div class="test-question">
+              <label>13. Потеря либидо: вы замечаете потерю интереса к сексу?</label>
+              <div class="test-options">
+                <label><input type="radio" name="q13" value="0" required> 0</label>
+                <label><input type="radio" name="q13" value="1"> 1</label>
+                <label><input type="radio" name="q13" value="2"> 2</label>
+                <label><input type="radio" name="q13" value="3"> 3</label>
+              </div>
+            </div>
+
+            <div class="test-question">
+              <label>14. Озабоченность собственным состоянием: вы беспокоитесь по поводу своего здоровья?</label>
+              <div class="test-options">
+                <label><input type="radio" name="q14" value="0" required> 0</label>
+                <label><input type="radio" name="q14" value="1"> 1</label>
+                <label><input type="radio" name="q14" value="2"> 2</label>
+                <label><input type="radio" name="q14" value="3"> 3</label>
+              </div>
+            </div>
+
+            <div class="test-question">
+              <label>15. Суицидальные мысли или намерения: вас посещают мысли, что жизнь не стоит того и что лучше умереть?</label>
+              <div class="test-options">
+                <label><input type="radio" name="q15" value="0" required> 0</label>
+                <label><input type="radio" name="q15" value="1"> 1</label>
+                <label><input type="radio" name="q15" value="2"> 2</label>
+                <label><input type="radio" name="q15" value="3"> 3</label>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" style="margin-top: 20px;">Рассчитать результат</button>
+        </form>
+      </div>
+
+      <div id="testResult" class="card" style="display:none;">
+        <h3>Результат теста</h3>
+        <div id="testScore"></div>
+        <p style="font-size: 12px; color: var(--muted); margin-top: 16px;">
+          <strong>Важно:</strong> Этот тест не является диагнозом. При серьезных симптомах обратитесь к специалисту.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>История результатов</h3>
+        <ul id="testHistory" aria-live="polite"></ul>
+      </div>
+    </section>
+
+    <!-- ================= VISION BOARD ================= -->
+    <section id="vision-board" class="section" style="display:none" aria-labelledby="vision-heading">
+      <h2 id="vision-heading">✨ Карта желаний</h2>
+
+      <div class="card">
+        <h3>Добавить желание</h3>
+        <form id="visionForm" onsubmit="event.preventDefault(); addVision();">
+          <label for="vCategory">Категория</label>
+          <select id="vCategory" required aria-required="true">
+            <option value="💼 Карьера">💼 Карьера</option>
+            <option value="💰 Финансы">💰 Финансы</option>
+            <option value="❤️ Отношения">❤️ Отношения</option>
+            <option value="🏠 Дом">🏠 Дом</option>
+            <option value="✈️ Путешествия">✈️ Путешествия</option>
+            <option value="💪 Здоровье">💪 Здоровье</option>
+            <option value="🎨 Хобби">🎨 Хобби</option>
+            <option value="🎓 Образование">🎓 Образование</option>
+            <option value="🌟 Другое">🌟 Другое</option>
+          </select>
+
+          <label for="vTitle">Мечта/Желание</label>
+          <input type="text" placeholder="Например: Купить дом у моря" id="vTitle" required aria-required="true">
+
+          <label for="vDescription">Описание (необязательно)</label>
+          <textarea placeholder="Подробнее о мечте..." id="vDescription"></textarea>
+
+          <label for="vDeadline">К какому сроку (необязательно)</label>
+          <input type="date" id="vDeadline">
+
+          <button type="submit">Добавить на карту</button>
+        </form>
+      </div>
+
+      <div id="visionBoard" class="vision-board-grid"></div>
+    </section>
+
+  </main>
+</div>
+
+<!-- Scripts -->
+<script src="js/storage.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>

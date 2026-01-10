@@ -29,9 +29,14 @@ function addWorkout() {
   };
 
   if (storage.add('workouts', data, storage.validateWorkout.bind(storage))) {
+    // Add XP for STR
+    if (typeof statsManager !== 'undefined') {
+      statsManager.addXPForActivity('workout');
+    }
     ui.clearForm('workoutForm');
     ui.setTodayDate('wDate');
     renderWorkouts();
+    updateDashboard();
   }
 }
 
@@ -189,15 +194,20 @@ function drawWorkoutChart() {
 function addMeditation() {
   const data = {
     date: document.getElementById('mDate').value,
-    minutes: parseInt(document.getElementById('mMinutes').value) || 0,
-    type: document.getElementById('mType').value.trim(),
-    notes: document.getElementById('mNotes').value.trim()
+    minutes: parseInt(document.getElementById('mDuration').value) || 0,
+    type: 'Meditation',
+    notes: document.getElementById('mNote').value.trim()
   };
 
   if (storage.add('meditations', data, storage.validateMeditation.bind(storage))) {
+    // Add XP for PER
+    if (typeof statsManager !== 'undefined') {
+      statsManager.addXPForActivity('meditation');
+    }
     ui.clearForm('meditationForm');
     ui.setTodayDate('mDate');
     renderMeditation();
+    updateDashboard();
   }
 }
 
@@ -368,21 +378,27 @@ function renderCode() {
 ========================= */
 function addGoal() {
   const data = {
-    name: document.getElementById('gName').value.trim(),
-    type: document.getElementById('gType').value,
+    goal: document.getElementById('gGoal').value.trim(),
     deadline: document.getElementById('gDeadline').value,
-    progress: parseInt(document.getElementById('gProgress').value) || 0
+    completed: false
   };
 
-  if (storage.add('goals', data, storage.validateGoal.bind(storage))) {
+  if (!data.goal || !data.deadline) {
+    ui.showError('Fill all required fields');
+    return;
+  }
+
+  if (storage.add('goals', data)) {
     ui.clearForm('goalForm');
     renderGoals();
+    updateDashboard();
   }
 }
 
 function deleteGoal(id) {
   if (storage.delete('goals', id)) {
     renderGoals();
+    updateDashboard();
   }
 }
 
@@ -589,12 +605,14 @@ function addProgramExercise() {
   if (storage.add('program', data, storage.validateProgram.bind(storage))) {
     ui.clearForm('programForm');
     renderProgram();
+    updateDashboard();
   }
 }
 
 function deleteProgramExercise(id) {
   if (storage.delete('program', id)) {
     renderProgram();
+    updateDashboard();
   }
 }
 
@@ -629,8 +647,13 @@ function completeExercise(id) {
   };
 
   if (storage.add('workouts', workoutData, storage.validateWorkout.bind(storage))) {
+    // Add XP for STR
+    if (typeof statsManager !== 'undefined') {
+      statsManager.addXPForActivity('workout');
+    }
     ui.showSuccess(`✓ Выполнено: ${exercise.exercise}`);
     renderWorkouts();
+    updateDashboard();
 
     // Если мы на странице тренировок, прокрутим к списку
     const workoutsSection = document.getElementById('workouts');
@@ -1013,18 +1036,213 @@ function importData() {
 function renderAll() {
   renderWorkouts();
   renderMeditation();
-  renderCode();
+  renderCoding();
   renderGoals();
   renderAchievements();
   renderProgram();
   renderTestHistory();
   renderVisionBoard();
   showRandomQuote();
+  updateDashboard();
+}
+
+/* =========================
+   CODING SESSIONS
+========================= */
+function addCodeSession() {
+  const data = {
+    date: document.getElementById('cDate').value,
+    hours: parseFloat(document.getElementById('cHours').value) || 0,
+    project: document.getElementById('cProject').value.trim(),
+    tech: document.getElementById('cTech').value.trim()
+  };
+
+  if (!data.date || !data.hours || !data.project) {
+    ui.showError('Заполните все обязательные поля');
+    return;
+  }
+
+  if (storage.add('code', data)) {
+    // Add XP for INT
+    if (typeof statsManager !== 'undefined') {
+      const xpAmount = Math.floor(data.hours * 20); // 20 XP per hour
+      statsManager.addXP('INT', xpAmount);
+    }
+    ui.clearForm('codeForm');
+    ui.setTodayDate('cDate');
+    renderCoding();
+    updateDashboard();
+  }
+}
+
+function deleteCoding(id) {
+  if (storage.delete('code', id)) {
+    renderCoding();
+    updateDashboard();
+  }
+}
+
+function renderCoding() {
+  const list = document.getElementById('codeList');
+  if (!list) return;
+
+  list.innerHTML = '';
+
+  if (!storage.data.code || storage.data.code.length === 0) {
+    list.innerHTML = '<li class="list-item">NO CODE SESSIONS</li>';
+    return;
+  }
+
+  // Sort by date (newest first)
+  const sorted = [...storage.data.code].sort((a, b) =>
+    new Date(b.date) - new Date(a.date)
+  );
+
+  sorted.forEach(c => {
+    const li = document.createElement('li');
+    li.className = 'list-item';
+
+    const content = document.createElement('div');
+    content.className = 'list-item-content';
+
+    const dateSpan = document.createElement('span');
+    dateSpan.className = 'list-item-date';
+    dateSpan.textContent = ui.formatDate(c.date);
+
+    const text = document.createElement('div');
+    text.innerHTML = `<strong>${c.project}</strong><br>${c.hours}h${c.tech ? ` — ${c.tech}` : ''}`;
+
+    content.appendChild(dateSpan);
+    content.appendChild(text);
+
+    const actions = document.createElement('div');
+    actions.className = 'list-item-actions';
+    actions.appendChild(ui.createDeleteButton(c.id, deleteCoding));
+
+    li.appendChild(content);
+    li.appendChild(actions);
+    list.appendChild(li);
+  });
+
+  // Render chart if canvas exists
+  renderCodingChart();
+}
+
+function renderCodingChart() {
+  const canvas = document.getElementById('codingChart');
+  if (!canvas) return;
+
+  // Simple chart - just show total hours per month
+  const ctx = canvas.getContext('2d');
+
+  // For now, just show a placeholder
+  ctx.fillStyle = '#00ff41';
+  ctx.font = '14px Share Tech Mono';
+  ctx.textAlign = 'center';
+  ctx.fillText('CODING CHART - Coming Soon', canvas.width / 2, canvas.height / 2);
+}
+
+/* =========================
+   DASHBOARD UPDATES
+========================= */
+function updateDashboard() {
+  // Update activity counts
+  const workoutCount = storage.data.workouts ? storage.data.workouts.length : 0;
+  const meditationCount = storage.data.meditations ? storage.data.meditations.length : 0;
+  const codeCount = storage.data.code ? storage.data.code.length : 0;
+  const goalsCount = storage.data.goals ? storage.data.goals.filter(g => !g.completed).length : 0;
+
+  const workoutEl = document.getElementById('workout-count');
+  if (workoutEl) workoutEl.textContent = workoutCount;
+
+  const meditationEl = document.getElementById('meditation-count');
+  if (meditationEl) meditationEl.textContent = meditationCount;
+
+  const codeEl = document.getElementById('code-count');
+  if (codeEl) codeEl.textContent = codeCount;
+
+  const goalsEl = document.getElementById('goals-count');
+  if (goalsEl) goalsEl.textContent = goalsCount;
+
+  // Update dashboard goals list
+  updateDashboardGoals();
+
+  // Update today's program
+  updateTodaysProgram();
+}
+
+function updateDashboardGoals() {
+  const list = document.getElementById('dashboard-goals');
+  if (!list) return;
+
+  list.innerHTML = '';
+
+  if (!storage.data.goals || storage.data.goals.length === 0) {
+    list.innerHTML = '<li class="list-item" style="font-size: 12px; padding: 8px; color: var(--nexus-green-dim);">NO ACTIVE MISSIONS</li>';
+    return;
+  }
+
+  const activeGoals = storage.data.goals.filter(g => !g.completed).slice(0, 3);
+
+  if (activeGoals.length === 0) {
+    list.innerHTML = '<li class="list-item" style="font-size: 12px; padding: 8px; color: var(--nexus-green-dim);">NO ACTIVE MISSIONS</li>';
+    return;
+  }
+
+  activeGoals.forEach(g => {
+    const li = document.createElement('li');
+    li.className = 'list-item';
+    li.style.fontSize = '12px';
+    li.style.padding = '8px';
+
+    const text = document.createElement('div');
+    text.innerHTML = `<strong>${g.goal}</strong><br><span style="color: var(--nexus-green-dim);">TARGET: ${ui.formatDate(g.deadline)}</span>`;
+
+    li.appendChild(text);
+    list.appendChild(li);
+  });
+}
+
+function updateTodaysProgram() {
+  const container = document.getElementById('dashboard-program');
+  if (!container) return;
+
+  // Get today's day of week in Russian
+  const days = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
+  const today = days[new Date().getDay()];
+
+  if (!storage.data.program) {
+    container.innerHTML = '<p style="font-size: 12px; color: var(--nexus-green-dim); text-align: center; padding: 20px;">NO SCHEDULED EXERCISES FOR TODAY</p>';
+    return;
+  }
+
+  const todaysExercises = storage.data.program.filter(p => p.day === today);
+
+  if (todaysExercises.length === 0) {
+    container.innerHTML = '<p style="font-size: 12px; color: var(--nexus-green-dim); text-align: center; padding: 20px;">NO SCHEDULED EXERCISES FOR TODAY</p>';
+    return;
+  }
+
+  container.innerHTML = '';
+  const list = document.createElement('ul');
+  list.style.listStyle = 'none';
+  list.style.padding = '0';
+
+  todaysExercises.forEach((ex, idx) => {
+    const li = document.createElement('li');
+    li.style.padding = '8px';
+    li.style.borderBottom = '1px solid var(--nexus-green-dark)';
+    li.innerHTML = `<strong>${idx + 1}. ${ex.exercise}</strong><br>${ex.sets}x${ex.reps} @ ${ex.weight}kg`;
+    list.appendChild(li);
+  });
+
+  container.appendChild(list);
 }
 
 function initializeDates() {
   ui.setTodayDate('wDate');
   ui.setTodayDate('mDate');
+  ui.setTodayDate('cDate');
 }
 
 // Инициализация при загрузке страницы
