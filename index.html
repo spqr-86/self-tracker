@@ -377,33 +377,199 @@
 
   <!-- ========== PSYCHOLOGICAL TEST SECTION ========== -->
   <section id="psych-test" class="section" style="display:none" aria-labelledby="test-heading">
-    <h2 id="test-heading">ПСИХОЛОГИЧЕСКИЙ ТЕСТ</h2>
+    <h2 id="test-heading">[PHQ-15] ТЕСТ СОМАТИЧЕСКИХ СИМПТОМОВ</h2>
 
     <div class="card">
-      <h3>ТЕСТ НА ДЕПРЕССИЮ (PHQ-9)</h3>
-      <p style="color: var(--nexus-green-dim); font-size: 12px; margin-bottom: 16px;">
-        Ответьте на вопросы о вашем самочувствии за последние 2 недели.
+      <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 24px;">
+        <div>
+          <h3>PHQ-15 - Оценка физических симптомов</h3>
+          <p style="color: var(--nexus-green-dim); font-size: 12px; margin-top: 8px;">
+            Patient Health Questionnaire-15 (PHQ-15) - стандартизированный тест для оценки соматических симптомов.
+          </p>
+        </div>
+        <button onclick="showPHQ15History()" style="padding: 8px 16px; font-size: 11px;">
+          📊 ИСТОРИЯ
+        </button>
+      </div>
+
+      <p style="color: var(--nexus-text-dim); font-size: 13px; margin-bottom: 24px; line-height: 1.6;">
+        Насколько вас беспокоили следующие проблемы <strong>в течение последних 4 недель</strong>?
       </p>
 
-      <form id="depressionTestForm">
-        <div style="margin-bottom: 20px;">
-          <label>1. Little interest or pleasure in doing things?</label>
-          <div style="display: flex; gap: 16px; margin-top: 8px;">
-            <label><input type="radio" name="q1" value="0" required> Совсем нет</label>
-            <label><input type="radio" name="q1" value="1"> Несколько дней</label>
-            <label><input type="radio" name="q1" value="2"> Больше половины</label>
-            <label><input type="radio" name="q1" value="3"> Почти каждый день</label>
+      <form id="phq15Form">
+        <!-- Question 1 -->
+        <div class="test-question">
+          <label class="test-question-label">1. Боли в животе или желудке</label>
+          <div class="test-options">
+            <label><input type="radio" name="q1" value="0" required> Совсем не беспокоит</label>
+            <label><input type="radio" name="q1" value="1"> Немного беспокоит</label>
+            <label><input type="radio" name="q1" value="2"> Сильно беспокоит</label>
           </div>
         </div>
 
-        <!-- Additional questions would go here - keeping it short for MVP -->
+        <!-- Question 2 -->
+        <div class="test-question">
+          <label class="test-question-label">2. Боли в спине</label>
+          <div class="test-options">
+            <label><input type="radio" name="q2" value="0" required> Совсем не беспокоит</label>
+            <label><input type="radio" name="q2" value="1"> Немного беспокоит</label>
+            <label><input type="radio" name="q2" value="2"> Сильно беспокоит</label>
+          </div>
+        </div>
 
-        <button type="button" onclick="calculateTestResult()">АНАЛИЗИРОВАТЬ</button>
+        <!-- Question 3 -->
+        <div class="test-question">
+          <label class="test-question-label">3. Боли в руках, ногах или суставах</label>
+          <div class="test-options">
+            <label><input type="radio" name="q3" value="0" required> Совсем не беспокоит</label>
+            <label><input type="radio" name="q3" value="1"> Немного беспокоит</label>
+            <label><input type="radio" name="q3" value="2"> Сильно беспокоит</label>
+          </div>
+        </div>
+
+        <!-- Question 4 -->
+        <div class="test-question">
+          <label class="test-question-label">4. Менструальные боли или другие проблемы с менструацией (для женщин)</label>
+          <div class="test-options">
+            <label><input type="radio" name="q4" value="0" required> Совсем не беспокоит</label>
+            <label><input type="radio" name="q4" value="1"> Немного беспокоит</label>
+            <label><input type="radio" name="q4" value="2"> Сильно беспокоит</label>
+          </div>
+        </div>
+
+        <!-- Question 5 -->
+        <div class="test-question">
+          <label class="test-question-label">5. Головные боли</label>
+          <div class="test-options">
+            <label><input type="radio" name="q5" value="0" required> Совсем не беспокоит</label>
+            <label><input type="radio" name="q5" value="1"> Немного беспокоит</label>
+            <label><input type="radio" name="q5" value="2"> Сильно беспокоит</label>
+          </div>
+        </div>
+
+        <!-- Question 6 -->
+        <div class="test-question">
+          <label class="test-question-label">6. Боли в груди</label>
+          <div class="test-options">
+            <label><input type="radio" name="q6" value="0" required> Совсем не беспокоит</label>
+            <label><input type="radio" name="q6" value="1"> Немного беспокоит</label>
+            <label><input type="radio" name="q6" value="2"> Сильно беспокоит</label>
+          </div>
+        </div>
+
+        <!-- Question 7 -->
+        <div class="test-question">
+          <label class="test-question-label">7. Головокружение</label>
+          <div class="test-options">
+            <label><input type="radio" name="q7" value="0" required> Совсем не беспокоит</label>
+            <label><input type="radio" name="q7" value="1"> Немного беспокоит</label>
+            <label><input type="radio" name="q7" value="2"> Сильно беспокоит</label>
+          </div>
+        </div>
+
+        <!-- Question 8 -->
+        <div class="test-question">
+          <label class="test-question-label">8. Обмороки</label>
+          <div class="test-options">
+            <label><input type="radio" name="q8" value="0" required> Совсем не беспокоит</label>
+            <label><input type="radio" name="q8" value="1"> Немного беспокоит</label>
+            <label><input type="radio" name="q8" value="2"> Сильно беспокоит</label>
+          </div>
+        </div>
+
+        <!-- Question 9 -->
+        <div class="test-question">
+          <label class="test-question-label">9. Учащенное сердцебиение или тахикардия</label>
+          <div class="test-options">
+            <label><input type="radio" name="q9" value="0" required> Совсем не беспокоит</label>
+            <label><input type="radio" name="q9" value="1"> Немного беспокоит</label>
+            <label><input type="radio" name="q9" value="2"> Сильно беспокоит</label>
+          </div>
+        </div>
+
+        <!-- Question 10 -->
+        <div class="test-question">
+          <label class="test-question-label">10. Одышка</label>
+          <div class="test-options">
+            <label><input type="radio" name="q10" value="0" required> Совсем не беспокоит</label>
+            <label><input type="radio" name="q10" value="1"> Немного беспокоит</label>
+            <label><input type="radio" name="q10" value="2"> Сильно беспокоит</label>
+          </div>
+        </div>
+
+        <!-- Question 11 -->
+        <div class="test-question">
+          <label class="test-question-label">11. Боль или проблемы во время полового акта</label>
+          <div class="test-options">
+            <label><input type="radio" name="q11" value="0" required> Совсем не беспокоит</label>
+            <label><input type="radio" name="q11" value="1"> Немного беспокоит</label>
+            <label><input type="radio" name="q11" value="2"> Сильно беспокоит</label>
+          </div>
+        </div>
+
+        <!-- Question 12 -->
+        <div class="test-question">
+          <label class="test-question-label">12. Запоры, диарея или расстройство желудка</label>
+          <div class="test-options">
+            <label><input type="radio" name="q12" value="0" required> Совсем не беспокоит</label>
+            <label><input type="radio" name="q12" value="1"> Немного беспокоит</label>
+            <label><input type="radio" name="q12" value="2"> Сильно беспокоит</label>
+          </div>
+        </div>
+
+        <!-- Question 13 -->
+        <div class="test-question">
+          <label class="test-question-label">13. Тошнота, газы или несварение</label>
+          <div class="test-options">
+            <label><input type="radio" name="q13" value="0" required> Совсем не беспокоит</label>
+            <label><input type="radio" name="q13" value="1"> Немного беспокоит</label>
+            <label><input type="radio" name="q13" value="2"> Сильно беспокоит</label>
+          </div>
+        </div>
+
+        <!-- Question 14 -->
+        <div class="test-question">
+          <label class="test-question-label">14. Чувство усталости или недостаток энергии</label>
+          <div class="test-options">
+            <label><input type="radio" name="q14" value="0" required> Совсем не беспокоит</label>
+            <label><input type="radio" name="q14" value="1"> Немного беспокоит</label>
+            <label><input type="radio" name="q14" value="2"> Сильно беспокоит</label>
+          </div>
+        </div>
+
+        <!-- Question 15 -->
+        <div class="test-question">
+          <label class="test-question-label">15. Проблемы со сном</label>
+          <div class="test-options">
+            <label><input type="radio" name="q15" value="0" required> Совсем не беспокоит</label>
+            <label><input type="radio" name="q15" value="1"> Немного беспокоит</label>
+            <label><input type="radio" name="q15" value="2"> Сильно беспокоит</label>
+          </div>
+        </div>
+
+        <button type="button" onclick="calculatePHQ15()">РАССЧИТАТЬ РЕЗУЛЬТАТ</button>
       </form>
 
-      <div id="testResult" style="margin-top: 20px; padding: 20px; border: 2px solid var(--nexus-green); display: none;">
-        <h3>РЕЗУЛЬТАТ ДИАГНОСТИКИ</h3>
-        <div id="testResultContent"></div>
+      <!-- Result Display -->
+      <div id="phq15Result" style="margin-top: 24px; padding: 24px; border: 2px solid var(--nexus-green); border-radius: var(--radius); display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <h3>РЕЗУЛЬТАТ ДИАГНОСТИКИ</h3>
+          <div style="font-size: 32px; color: var(--nexus-green); font-weight: 700;" id="phq15Score">0</div>
+        </div>
+
+        <div id="phq15Interpretation" style="margin-bottom: 16px;"></div>
+
+        <div id="phq15Recommendations" style="background: var(--nexus-surface); padding: 16px; border-radius: var(--radius-sm); margin-top: 16px;"></div>
+
+        <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--nexus-border); font-size: 11px; color: var(--nexus-text-dim);">
+          Результат автоматически сохранен в истории. Дата: <span id="phq15Date"></span>
+        </div>
+      </div>
+
+      <!-- History Display -->
+      <div id="phq15History" style="margin-top: 24px; display: none;">
+        <h3 style="margin-bottom: 16px;">История тестов PHQ-15</h3>
+        <div id="phq15HistoryContent"></div>
       </div>
     </div>
   </section>
@@ -551,6 +717,7 @@
   <script src="js/ui.js"></script>
   <script src="js/stats.js"></script>
   <script src="js/personal-code.js"></script>
+  <script src="js/phq15.js"></script>
   <script src="js/app.js"></script>
 
 </body>
