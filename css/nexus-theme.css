@@ -652,23 +652,51 @@ canvas {
    MOBILE RESPONSIVE
 ===================== */
 @media (max-width: 768px) {
+  body {
+    padding-bottom: 20px;
+  }
+
   h1 {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     letter-spacing: 2px;
+  }
+
+  h1::before,
+  h1::after {
+    content: '';
+  }
+
+  header {
+    position: relative;
+    padding: 12px;
   }
 
   nav {
     flex-direction: column;
+    max-height: 400px;
+    overflow-y: auto;
   }
 
   nav button {
     width: 100%;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
+    padding: 8px 16px;
+    font-size: 12px;
+  }
+
+  .section {
+    padding: 12px;
+    padding-bottom: 40px;
   }
 
   .bento-grid {
     grid-template-columns: 1fr;
     padding: 10px;
+    gap: 12px;
+  }
+
+  .bento-item {
+    padding: 12px;
   }
 
   .bento-large,
@@ -678,9 +706,42 @@ canvas {
     grid-row: span 1;
   }
 
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .stat-card {
+    padding: 12px;
+  }
+
+  .stat-value {
+    font-size: 2rem;
+  }
+
   .level-up-title {
     font-size: 2rem;
     letter-spacing: 4px;
+  }
+
+  .card {
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+
+  h2 {
+    font-size: 1.3rem;
+  }
+
+  h3 {
+    font-size: 1.1rem;
+  }
+
+  /* Fix for mobile browser bottom bars */
+  .notifications {
+    bottom: 80px;
+    right: 10px;
+    max-width: calc(100% - 20px);
   }
 }
 
