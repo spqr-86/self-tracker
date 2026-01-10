@@ -98,6 +98,14 @@ button:disabled {
   margin-left: 4px;
 }
 
+.btn-complete {
+  background: var(--success);
+  padding: 4px 8px;
+  font-size: 12px;
+  margin-left: 4px;
+  font-weight: bold;
+}
+
 /* =========================
    FORM ELEMENTS
 ========================= */
