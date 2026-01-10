@@ -31,14 +31,14 @@
 
   <!-- ========== DASHBOARD SECTION ========== -->
   <section id="dashboard" class="section">
-    <h2>[ SYSTEM OVERVIEW ]</h2>
+    <h2>SYSTEM OVERVIEW</h2>
 
     <!-- BENTO GRID -->
     <div class="bento-grid">
 
       <!-- RPG STATS WIDGET (Wide) -->
-      <div class="bento-item bento-wide">
-        <h3>[ CHARACTER STATS ]</h3>
+      <div class="bento-item bento-wide" data-module="[STAT_SYS_01]">
+        <h3>CHARACTER STATS</h3>
         <div class="stats-grid">
           <div class="stat-card">
             <div class="stat-name">STR</div>
@@ -82,8 +82,8 @@
       </div>
 
       <!-- WEIGHT TRACKER WIDGET -->
-      <div class="bento-item">
-        <h3>[ WEIGHT MONITOR ]</h3>
+      <div class="bento-item" data-module="[BODY_MON_01]">
+        <h3>WEIGHT MONITOR</h3>
         <div style="text-align: center; padding: 20px;">
           <div style="font-size: 3rem; font-weight: bold; text-shadow: var(--nexus-glow-strong);" id="current-weight">
             --
@@ -101,8 +101,8 @@
       </div>
 
       <!-- ACTIVITY SUMMARY -->
-      <div class="bento-item">
-        <h3>[ ACTIVITY LOG ]</h3>
+      <div class="bento-item" data-module="[ACT_LOG_01]">
+        <h3>ACTIVITY LOG</h3>
         <div style="padding: 10px 0;">
           <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--nexus-green-dark);">
             <span style="color: var(--nexus-green-dim);">WORKOUTS:</span>
@@ -124,8 +124,8 @@
       </div>
 
       <!-- GOALS WIDGET -->
-      <div class="bento-item">
-        <h3>[ ACTIVE MISSIONS ]</h3>
+      <div class="bento-item" data-module="[GOAL_TRK_01]">
+        <h3>ACTIVE MISSIONS</h3>
         <ul id="dashboard-goals" style="max-height: 200px; overflow-y: auto;">
           <li class="list-item" style="font-size: 12px; padding: 8px; color: var(--nexus-green-dim);">
             NO ACTIVE MISSIONS
@@ -137,8 +137,8 @@
       </div>
 
       <!-- PROGRAM WIDGET (Wide) -->
-      <div class="bento-item bento-wide">
-        <h3>[ TODAY'S TRAINING PROTOCOL ]</h3>
+      <div class="bento-item bento-wide" data-module="[PROG_DAY_01]">
+        <h3>TODAY'S TRAINING PROTOCOL</h3>
         <div id="dashboard-program">
           <p style="font-size: 12px; color: var(--nexus-green-dim); text-align: center; padding: 20px;">
             NO SCHEDULED EXERCISES FOR TODAY
@@ -154,7 +154,7 @@
 
   <!-- ========== WORKOUT PROGRAM SECTION ========== -->
   <section id="workout-program" class="section" style="display:none" aria-labelledby="program-heading">
-    <h2 id="program-heading">[ TRAINING PROGRAM ]</h2>
+    <h2 id="program-heading">TRAINING PROGRAM</h2>
 
     <div class="card">
       <h3>TUESDAY</h3>
@@ -203,7 +203,7 @@
 
   <!-- ========== WORKOUTS SECTION ========== -->
   <section id="workouts" class="section" style="display:none" aria-labelledby="workout-heading">
-    <h2 id="workout-heading">[ COMBAT TRAINING LOG ]</h2>
+    <h2 id="workout-heading">COMBAT TRAINING LOG</h2>
 
     <div class="card">
       <canvas id="workoutChart" aria-label="Workout progress chart"></canvas>
@@ -239,7 +239,7 @@
 
   <!-- ========== MEDITATION SECTION ========== -->
   <section id="meditation" class="section" style="display:none" aria-labelledby="meditation-heading">
-    <h2 id="meditation-heading">[ DEFRAGMENTATION MODULE ]</h2>
+    <h2 id="meditation-heading">DEFRAGMENTATION MODULE</h2>
 
     <div class="card">
       <canvas id="meditationChart" aria-label="Meditation progress chart"></canvas>
@@ -269,7 +269,7 @@
 
   <!-- ========== CODING SECTION ========== -->
   <section id="coding" class="section" style="display:none" aria-labelledby="coding-heading">
-    <h2 id="coding-heading">[ INT TRAINING ]</h2>
+    <h2 id="coding-heading">INT TRAINING</h2>
 
     <div class="card">
       <canvas id="codingChart" aria-label="Coding progress chart"></canvas>
@@ -302,7 +302,7 @@
 
   <!-- ========== GOALS SECTION ========== -->
   <section id="goals" class="section" style="display:none" aria-labelledby="goals-heading">
-    <h2 id="goals-heading">[ MISSION OBJECTIVES ]</h2>
+    <h2 id="goals-heading">MISSION OBJECTIVES</h2>
 
     <div class="card">
       <h3>ADD NEW GOAL</h3>
@@ -330,7 +330,7 @@
 
   <!-- ========== VISION BOARD SECTION ========== -->
   <section id="vision" class="section" style="display:none" aria-labelledby="vision-heading">
-    <h2 id="vision-heading">[ VISION MAP ]</h2>
+    <h2 id="vision-heading">VISION MAP</h2>
 
     <div class="vision-grid" id="visionGrid">
       <!-- Vision cards will be rendered here -->
@@ -339,7 +339,7 @@
 
   <!-- ========== PSYCHOLOGICAL TEST SECTION ========== -->
   <section id="psych-test" class="section" style="display:none" aria-labelledby="test-heading">
-    <h2 id="test-heading">[ PSYCHOLOGICAL DIAGNOSTIC ]</h2>
+    <h2 id="test-heading">PSYCHOLOGICAL DIAGNOSTIC</h2>
 
     <div class="card">
       <h3>DEPRESSION SCREENING (PHQ-9)</h3>
