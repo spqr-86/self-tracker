@@ -519,6 +519,66 @@ progress::-moz-progress-bar {
 }
 
 /* =========================
+   PSYCHOLOGICAL TEST
+========================= */
+.test-questions {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.test-question {
+  padding: 16px;
+  background: var(--bg);
+  border-radius: 8px;
+  border-left: 3px solid var(--accent);
+}
+
+.test-question label:first-child {
+  display: block;
+  margin-bottom: 12px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.test-options {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.test-options label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: white;
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all var(--transition);
+  font-weight: normal;
+  margin-bottom: 0;
+}
+
+.test-options label:hover {
+  border-color: var(--accent);
+  background: rgba(91, 141, 239, 0.05);
+}
+
+.test-options input[type="radio"] {
+  width: auto;
+  margin: 0;
+  cursor: pointer;
+}
+
+.test-options label:has(input[type="radio"]:checked) {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: white;
+}
+
+/* =========================
    PRINT STYLES
 ========================= */
 @media print {

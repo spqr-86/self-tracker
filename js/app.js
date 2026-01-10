@@ -581,6 +581,246 @@ function renderAchievements() {
 }
 
 /* =========================
+   WORKOUT PROGRAM
+========================= */
+function addProgramExercise() {
+  const data = {
+    day: document.getElementById('pDay').value,
+    exercise: document.getElementById('pExercise').value.trim(),
+    sets: parseInt(document.getElementById('pSets').value),
+    reps: parseInt(document.getElementById('pReps').value),
+    weight: parseFloat(document.getElementById('pWeight').value),
+    video: document.getElementById('pVideo').value.trim()
+  };
+
+  if (storage.add('program', data, storage.validateProgram.bind(storage))) {
+    ui.clearForm('programForm');
+    renderProgram();
+  }
+}
+
+function deleteProgramExercise(id) {
+  if (storage.delete('program', id)) {
+    renderProgram();
+  }
+}
+
+function editProgramExercise(id) {
+  const exercise = storage.data.program.find(p => p.id === id);
+  if (!exercise) return;
+
+  document.getElementById('pDay').value = exercise.day;
+  document.getElementById('pExercise').value = exercise.exercise;
+  document.getElementById('pSets').value = exercise.sets;
+  document.getElementById('pReps').value = exercise.reps;
+  document.getElementById('pWeight').value = exercise.weight;
+  document.getElementById('pVideo').value = exercise.video || '';
+
+  storage.delete('program', id);
+  renderProgram();
+
+  document.getElementById('programForm').scrollIntoView({ behavior: 'smooth' });
+}
+
+function renderProgram() {
+  const days = {
+    'Вторник': document.getElementById('programTuesday'),
+    'Четверг': document.getElementById('programThursday'),
+    'Суббота': document.getElementById('programSaturday')
+  };
+
+  // Очистить все списки
+  Object.values(days).forEach(list => {
+    if (list) list.innerHTML = '';
+  });
+
+  if (storage.data.program.length === 0) {
+    Object.values(days).forEach(list => {
+      if (list) list.innerHTML = '<li class="list-item">Нет упражнений</li>';
+    });
+    return;
+  }
+
+  // Группировка по дням
+  const programByDay = {
+    'Вторник': [],
+    'Четверг': [],
+    'Суббота': []
+  };
+
+  storage.data.program.forEach(p => {
+    if (programByDay[p.day]) {
+      programByDay[p.day].push(p);
+    }
+  });
+
+  // Отрисовка каждого дня
+  Object.entries(programByDay).forEach(([day, exercises]) => {
+    const list = days[day];
+    if (!list) return;
+
+    if (exercises.length === 0) {
+      list.innerHTML = '<li class="list-item">Нет упражнений</li>';
+      return;
+    }
+
+    exercises.forEach((p, index) => {
+      const li = document.createElement('li');
+      li.className = 'list-item';
+
+      const content = document.createElement('div');
+      content.className = 'list-item-content';
+
+      const orderSpan = document.createElement('span');
+      orderSpan.style.fontWeight = 'bold';
+      orderSpan.style.marginRight = '8px';
+      orderSpan.textContent = `${index + 1}.`;
+
+      const text = document.createElement('div');
+      text.innerHTML = `<strong>${p.exercise}</strong><br>${p.sets}x${p.reps} @ ${p.weight}кг`;
+
+      content.appendChild(orderSpan);
+      content.appendChild(text);
+
+      if (p.video) {
+        const videoLink = ui.createYoutubePreview(p.video);
+        if (videoLink) content.appendChild(videoLink);
+      }
+
+      const actions = document.createElement('div');
+      actions.className = 'list-item-actions';
+      actions.appendChild(ui.createEditButton(p.id, editProgramExercise));
+      actions.appendChild(ui.createDeleteButton(p.id, deleteProgramExercise));
+
+      li.appendChild(content);
+      li.appendChild(actions);
+      list.appendChild(li);
+    });
+  });
+}
+
+/* =========================
+   PSYCHOLOGICAL TEST
+========================= */
+function calculateTestResult() {
+  const form = document.getElementById('depressionTestForm');
+  let totalScore = 0;
+
+  // Подсчитать баллы
+  for (let i = 1; i <= 15; i++) {
+    const answer = form.querySelector(`input[name="q${i}"]:checked`);
+    if (!answer) {
+      ui.showError(`Пожалуйста, ответьте на вопрос ${i}`);
+      return;
+    }
+    totalScore += parseInt(answer.value);
+  }
+
+  // Интерпретация результата
+  let interpretation = '';
+  let severity = '';
+
+  if (totalScore <= 4) {
+    severity = 'Минимальная';
+    interpretation = 'Симптомы депрессии минимальны или отсутствуют. Вы в хорошем психологическом состоянии.';
+  } else if (totalScore <= 9) {
+    severity = 'Легкая';
+    interpretation = 'Легкие симптомы депрессии. Рекомендуется обратить внимание на свое состояние и попробовать методы самопомощи.';
+  } else if (totalScore <= 14) {
+    severity = 'Умеренная';
+    interpretation = 'Умеренные симптомы депрессии. Рекомендуется обратиться к специалисту для консультации.';
+  } else if (totalScore <= 19) {
+    severity = 'Средне-тяжелая';
+    interpretation = 'Средне-тяжелые симптомы депрессии. Настоятельно рекомендуется обратиться к психологу или психотерапевту.';
+  } else {
+    severity = 'Тяжелая';
+    interpretation = 'Тяжелые симптомы депрессии. Необходимо немедленно обратиться к специалисту.';
+  }
+
+  // Показать результат
+  const resultDiv = document.getElementById('testResult');
+  const scoreDiv = document.getElementById('testScore');
+
+  scoreDiv.innerHTML = `
+    <div style="text-align: center; padding: 20px;">
+      <div style="font-size: 48px; font-weight: bold; color: var(--accent); margin-bottom: 8px;">
+        ${totalScore}
+      </div>
+      <div style="font-size: 20px; margin-bottom: 16px;">
+        ${severity} депрессия
+      </div>
+      <div style="font-size: 14px; color: var(--text); line-height: 1.6;">
+        ${interpretation}
+      </div>
+    </div>
+  `;
+
+  resultDiv.style.display = 'block';
+  resultDiv.scrollIntoView({ behavior: 'smooth' });
+
+  // Сохранить результат
+  const testData = {
+    date: new Date().toISOString().split('T')[0],
+    score: totalScore,
+    severity: severity
+  };
+
+  if (storage.add('testResults', testData, storage.validateTestResult.bind(storage))) {
+    renderTestHistory();
+    ui.showSuccess('Результат теста сохранен');
+  }
+
+  // Очистить форму
+  form.reset();
+}
+
+function deleteTestResult(id) {
+  if (storage.delete('testResults', id)) {
+    renderTestHistory();
+  }
+}
+
+function renderTestHistory() {
+  const list = document.getElementById('testHistory');
+  list.innerHTML = '';
+
+  if (storage.data.testResults.length === 0) {
+    list.innerHTML = '<li class="list-item">Нет результатов</li>';
+    return;
+  }
+
+  const sorted = [...storage.data.testResults].sort((a, b) =>
+    new Date(b.date) - new Date(a.date)
+  );
+
+  sorted.forEach(t => {
+    const li = document.createElement('li');
+    li.className = 'list-item';
+
+    const content = document.createElement('div');
+    content.className = 'list-item-content';
+
+    const dateSpan = document.createElement('span');
+    dateSpan.className = 'list-item-date';
+    dateSpan.textContent = ui.formatDate(t.date);
+
+    const text = document.createElement('div');
+    text.innerHTML = `<strong>Баллы:</strong> ${t.score} — <span style="color: var(--muted);">${t.severity}</span>`;
+
+    content.appendChild(dateSpan);
+    content.appendChild(text);
+
+    const actions = document.createElement('div');
+    actions.className = 'list-item-actions';
+    actions.appendChild(ui.createDeleteButton(t.id, deleteTestResult));
+
+    li.appendChild(content);
+    li.appendChild(actions);
+    list.appendChild(li);
+  });
+}
+
+/* =========================
    IMPORT / EXPORT
 ========================= */
 function exportData() {
@@ -603,6 +843,8 @@ function renderAll() {
   renderCode();
   renderGoals();
   renderAchievements();
+  renderProgram();
+  renderTestHistory();
   showRandomQuote();
 }
 

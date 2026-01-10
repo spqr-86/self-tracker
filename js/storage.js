@@ -9,7 +9,9 @@ class StorageManager {
       meditations: [],
       code: [],
       goals: [],
-      achievements: []
+      achievements: [],
+      program: [],
+      testResults: []
     };
     this.load();
   }
@@ -108,6 +110,21 @@ class StorageManager {
 
   validateAchievement(data) {
     if (!data.text || data.text.trim() === '') return 'Введите описание достижения';
+    return null;
+  }
+
+  validateProgram(data) {
+    if (!data.day) return 'Укажите день недели';
+    if (!data.exercise || data.exercise.trim() === '') return 'Укажите упражнение';
+    if (!data.sets || isNaN(data.sets) || data.sets < 1) return 'Укажите количество подходов (минимум 1)';
+    if (!data.reps || isNaN(data.reps) || data.reps < 1) return 'Укажите количество повторений (минимум 1)';
+    if (data.weight === undefined || isNaN(data.weight) || data.weight < 0) return 'Укажите корректный вес';
+    return null;
+  }
+
+  validateTestResult(data) {
+    if (!data.score && data.score !== 0) return 'Отсутствует результат теста';
+    if (isNaN(data.score) || data.score < 0 || data.score > 45) return 'Некорректный результат теста';
     return null;
   }
 
@@ -232,7 +249,7 @@ class StorageManager {
           const imported = JSON.parse(reader.result);
 
           // Проверка структуры данных
-          const requiredKeys = ['workouts', 'meditations', 'code', 'goals', 'achievements'];
+          const requiredKeys = ['workouts', 'meditations', 'code', 'goals', 'achievements', 'program', 'testResults'];
           const isValid = requiredKeys.every(key => Array.isArray(imported[key]));
 
           if (!isValid) {
