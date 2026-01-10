@@ -1250,6 +1250,11 @@ document.addEventListener('DOMContentLoaded', () => {
   initializeDates();
   renderAll();
 
+  // Инициализация Personal Code системы
+  if (typeof personalCodeManager !== 'undefined') {
+    personalCodeManager.updateUI();
+  }
+
   // Обновлять цитату при каждом открытии раздела мотивации
   const motivationNav = document.querySelector('[data-section="motivation"]');
   if (motivationNav) {
@@ -1269,10 +1274,10 @@ function toggleTheme() {
   const html = document.documentElement;
   const currentTheme = html.getAttribute('data-theme');
   const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-  
+
   html.setAttribute('data-theme', newTheme);
   localStorage.setItem('nexusTheme', newTheme);
-  
+
   // Update theme toggle icon
   const icon = document.getElementById('theme-icon');
   if (icon) {
@@ -1280,11 +1285,25 @@ function toggleTheme() {
   }
 }
 
+// Toggle mobile menu
+function toggleMenu() {
+  const nav = document.getElementById('main-nav');
+  const hamburger = document.getElementById('menu-toggle');
+
+  if (nav) {
+    nav.classList.toggle('nav-closed');
+  }
+
+  if (hamburger) {
+    hamburger.classList.toggle('active');
+  }
+}
+
 // Initialize theme from localStorage
 function initTheme() {
   const savedTheme = localStorage.getItem('nexusTheme') || 'dark';
   document.documentElement.setAttribute('data-theme', savedTheme);
-  
+
   const icon = document.getElementById('theme-icon');
   if (icon) {
     icon.textContent = savedTheme === 'light' ? '☀️' : '🌙';
