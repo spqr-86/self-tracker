@@ -1,5 +1,28 @@
-Version: 2.0.1
-Last updated: 2026-01-10 16:30
-Commit: 98ad364 (YouTube links fix)
-YouTube links now properly visible in workout program
-All features working: navigation, forms, notifications, edit/delete, vision board, program
+NEXUS OS v2.0.0
+Last updated: 2026-01-10 19:00
+Commit: 5dc09b1 (Design v2.0 - Apple meets Fallout)
+
+Major Update: Complete visual redesign
+- "Pip-Boy designed in 2026" aesthetic
+- JetBrains Mono + Inter fonts
+- Coordinate grid patterns
+- Technical module markers
+- Softer glows and modern effects
+- Glass morphism elements
+- Refined color palette
+- Smooth animations
+
+Features:
+✅ RPG Stats System (STR, PER, INT, WIL)
+✅ Dashboard with Bento Grid
+✅ Workout Program & History
+✅ Meditation Tracker
+✅ Coding Sessions
+✅ Goals & Achievements
+✅ Vision Board
+✅ Psychological Test
+✅ XP progression with level-ups
+✅ Mobile responsive
+✅ Full localStorage persistence
+
+Next phase: Weight tracker with micro-quests, PHQ-15, CBT diary
