@@ -16,17 +16,6 @@ function showSection(sectionId, event) {
   ui.showSection(sectionId, event);
 }
 
-// Инициализация навигации
-document.addEventListener('DOMContentLoaded', () => {
-  const navButtons = document.querySelectorAll('nav button[data-section]');
-  navButtons.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      const sectionId = btn.getAttribute('data-section');
-      showSection(sectionId, e);
-    });
-  });
-});
-
 /* =========================
    WORKOUTS
 ========================= */
