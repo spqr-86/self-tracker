@@ -25,8 +25,7 @@ function addWorkout() {
     exercise: document.getElementById('wExercise').value.trim(),
     sets: parseInt(document.getElementById('wSets').value) || 0,
     reps: parseInt(document.getElementById('wReps').value) || 0,
-    weight: parseFloat(document.getElementById('wWeight').value) || 0,
-    video: document.getElementById('wVideo').value.trim()
+    weight: parseFloat(document.getElementById('wWeight').value) || 0
   };
 
   if (storage.add('workouts', data, storage.validateWorkout.bind(storage))) {
@@ -51,7 +50,6 @@ function editWorkout(id) {
   document.getElementById('wSets').value = workout.sets;
   document.getElementById('wReps').value = workout.reps;
   document.getElementById('wWeight').value = workout.weight;
-  document.getElementById('wVideo').value = workout.video || '';
 
   // Удаляем старую запись
   storage.delete('workouts', id);
@@ -91,11 +89,6 @@ function renderWorkouts() {
 
     content.appendChild(dateSpan);
     content.appendChild(text);
-
-    if (w.video) {
-      const videoLink = ui.createYoutubePreview(w.video);
-      if (videoLink) content.appendChild(videoLink);
-    }
 
     const actions = document.createElement('div');
     actions.className = 'list-item-actions';
@@ -622,6 +615,31 @@ function editProgramExercise(id) {
   document.getElementById('programForm').scrollIntoView({ behavior: 'smooth' });
 }
 
+function completeExercise(id) {
+  const exercise = storage.data.program.find(p => p.id === id);
+  if (!exercise) return;
+
+  // Создать запись в тренировках с сегодняшней датой
+  const workoutData = {
+    date: new Date().toISOString().split('T')[0],
+    exercise: exercise.exercise,
+    sets: exercise.sets,
+    reps: exercise.reps,
+    weight: exercise.weight
+  };
+
+  if (storage.add('workouts', workoutData, storage.validateWorkout.bind(storage))) {
+    ui.showSuccess(`✓ Выполнено: ${exercise.exercise}`);
+    renderWorkouts();
+
+    // Если мы на странице тренировок, прокрутим к списку
+    const workoutsSection = document.getElementById('workouts');
+    if (workoutsSection.style.display !== 'none') {
+      document.getElementById('workoutList').scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+}
+
 function renderProgram() {
   const days = {
     'Вторник': document.getElementById('programTuesday'),
@@ -689,6 +707,19 @@ function renderProgram() {
 
       const actions = document.createElement('div');
       actions.className = 'list-item-actions';
+
+      // Кнопка "Выполнить"
+      const completeBtn = document.createElement('button');
+      completeBtn.className = 'btn-complete';
+      completeBtn.textContent = '✓';
+      completeBtn.setAttribute('aria-label', 'Отметить как выполненное');
+      completeBtn.title = 'Выполнить упражнение';
+      completeBtn.onclick = (e) => {
+        e.stopPropagation();
+        completeExercise(p.id);
+      };
+
+      actions.appendChild(completeBtn);
       actions.appendChild(ui.createEditButton(p.id, editProgramExercise));
       actions.appendChild(ui.createDeleteButton(p.id, deleteProgramExercise));
 

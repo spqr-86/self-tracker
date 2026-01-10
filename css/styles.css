@@ -98,6 +98,14 @@ button:disabled {
   margin-left: 4px;
 }
 
+.btn-complete {
+  background: var(--success);
+  padding: 4px 8px;
+  font-size: 12px;
+  margin-left: 4px;
+  font-weight: bold;
+}
+
 /* =========================
    FORM ELEMENTS
 ========================= */
@@ -436,16 +444,15 @@ progress::-moz-progress-bar {
     width: 100%;
     height: auto;
     display: flex;
-    overflow-x: auto;
+    flex-direction: column;
     padding: 12px;
     position: static;
   }
 
   nav button {
-    flex: 0 0 auto;
-    white-space: nowrap;
-    margin-right: 8px;
-    margin-bottom: 0;
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 8px;
   }
 
   nav hr {
