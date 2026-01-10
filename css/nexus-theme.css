@@ -10,7 +10,7 @@
    CSS VARIABLES
 ===================== */
 :root {
-  /* Color Profile */
+  /* Dark Theme Colors */
   --nexus-void: #050505;
   --nexus-black: #0a0a0a;
   --nexus-surface: #0f0f0f;
@@ -39,6 +39,29 @@
   --radius: 24px;
   --radius-sm: 12px;
   --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Light Theme */
+[data-theme="light"] {
+  --nexus-void: #f5f5f5;
+  --nexus-black: #ffffff;
+  --nexus-surface: #fafafa;
+  --nexus-border: #e0e0e0;
+  --nexus-border-light: #d0d0d0;
+
+  --nexus-green: #00aa33;
+  --nexus-green-dim: rgba(0, 170, 51, 0.7);
+  --nexus-green-dark: rgba(0, 170, 51, 0.4);
+  --nexus-amber: #ff9800;
+
+  --nexus-text: #1a1a1a;
+  --nexus-text-dim: #5a5a5a;
+  --nexus-text-darker: #8a8a8a;
+
+  --glow-soft: 0 0 8px rgba(0, 170, 51, 0.3);
+  --glow-medium: 0 0 12px rgba(0, 170, 51, 0.4);
+  --glow-strong: 0 0 16px rgba(0, 170, 51, 0.5);
+  --text-glow: 0 0 5px rgba(0, 170, 51, 0.4);
 }
 
 /* =====================
@@ -77,6 +100,14 @@ body::before {
   animation: scan 4s linear infinite;
 }
 
+[data-theme="light"] body::before {
+  background: linear-gradient(to bottom,
+    transparent,
+    rgba(0, 170, 51, 0.15),
+    transparent
+  );
+}
+
 @keyframes scan {
   0% { top: 0; opacity: 0; }
   10% { opacity: 1; }
@@ -96,6 +127,10 @@ body::after {
   pointer-events: none;
   z-index: 9998;
   opacity: 0.3;
+}
+
+[data-theme="light"] body::after {
+  opacity: 0.15;
 }
 
 /* =====================
