@@ -147,6 +147,23 @@ header {
   background: rgba(10, 10, 10, 0.8);
 }
 
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.header-branding {
+  flex: 1;
+}
+
+.header-controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
 h1 {
   font-family: var(--font-mono);
   font-size: 1.5rem;
@@ -166,6 +183,61 @@ header p {
   text-transform: uppercase;
 }
 
+/* Icon buttons (theme toggle, hamburger) */
+.icon-btn {
+  background: transparent;
+  border: 1px solid var(--nexus-border);
+  color: var(--nexus-text);
+  padding: 10px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+}
+
+.icon-btn:hover {
+  border-color: var(--nexus-green);
+  box-shadow: var(--glow-soft);
+}
+
+/* Hamburger Menu Button */
+.hamburger {
+  flex-direction: column;
+  gap: 5px;
+  padding: 8px;
+}
+
+.hamburger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--nexus-text);
+  transition: var(--transition);
+  border-radius: 2px;
+}
+
+.hamburger:hover span {
+  background: var(--nexus-green);
+}
+
+/* Hamburger Animation - when menu is open */
+.hamburger.active span:nth-child(1) {
+  transform: rotate(45deg) translate(6px, 6px);
+}
+
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(6px, -6px);
+}
+
 /* =====================
    NAVIGATION
 ===================== */
@@ -174,6 +246,16 @@ nav {
   gap: 8px;
   flex-wrap: wrap;
   margin-top: 20px;
+  max-height: 500px;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+  opacity: 1;
+}
+
+nav.nav-closed {
+  max-height: 0;
+  opacity: 0;
+  margin-top: 0;
 }
 
 nav button {
@@ -1373,6 +1455,20 @@ canvas {
 /* =====================
    MOBILE RESPONSIVE
 ===================== */
+/* Desktop - hide hamburger, always show nav */
+@media (min-width: 769px) {
+  .hamburger {
+    display: none;
+  }
+
+  nav {
+    max-height: 500px !important;
+    opacity: 1 !important;
+    margin-top: 20px !important;
+  }
+}
+
+/* Mobile - show hamburger, collapsible nav */
 @media (max-width: 768px) {
   body {
     padding-bottom: 20px;
@@ -1393,10 +1489,23 @@ canvas {
     padding: 12px;
   }
 
+  header p {
+    font-size: 8px;
+    letter-spacing: 1px;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+
   nav {
     flex-direction: column;
-    max-height: 400px;
-    overflow-y: auto;
+  }
+
+  nav.nav-closed {
+    max-height: 0;
+    opacity: 0;
+    margin-top: 0;
   }
 
   nav button {

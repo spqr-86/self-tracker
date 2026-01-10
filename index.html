@@ -12,19 +12,26 @@
 
   <!-- HEADER -->
   <header>
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-      <div>
+    <div class="header-top">
+      <div class="header-branding">
         <h1>NEXUS OS</h1>
         <p style="font-size: 12px; color: var(--nexus-green-dim); margin-top: 8px; letter-spacing: 2px;">
-          ПЕРСОНАЛЬНАЯ ОПЕРАЦИОННАЯ СИСТЕМА ЖИЗНИ v2.0.0
+          ПЕРСОНАЛЬНАЯ ОПЕРАЦИОННАЯ СИСТЕМА ЖИЗНИ v2.1.0
         </p>
       </div>
-      <button onclick="toggleTheme()" id="theme-toggle" style="padding: 10px 16px; border-radius: 8px;" title="Переключить тему">
-        <span id="theme-icon">🌙</span>
-      </button>
+      <div class="header-controls">
+        <button onclick="toggleTheme()" id="theme-toggle" class="icon-btn" title="Переключить тему">
+          <span id="theme-icon">🌙</span>
+        </button>
+        <button onclick="toggleMenu()" id="menu-toggle" class="icon-btn hamburger" title="Меню">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
     </div>
 
-    <nav>
+    <nav id="main-nav" class="nav-closed">
       <button onclick="showSection('dashboard', event)" class="active">Дашборд</button>
       <button onclick="showSection('workout-program', event)">Программа</button>
       <button onclick="showSection('workouts', event)">Тренировки</button>
