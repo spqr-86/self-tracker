@@ -40,6 +40,9 @@
     <button onclick="showSection('psych-test', event)" aria-label="Перейти к психологическому тесту">
       🧠 Тест
     </button>
+    <button onclick="showSection('vision-board', event)" aria-label="Перейти к карте желаний">
+      ✨ Карта желаний
+    </button>
 
     <hr>
 
@@ -439,6 +442,42 @@
         <h3>История результатов</h3>
         <ul id="testHistory" aria-live="polite"></ul>
       </div>
+    </section>
+
+    <!-- ================= VISION BOARD ================= -->
+    <section id="vision-board" class="section" style="display:none" aria-labelledby="vision-heading">
+      <h2 id="vision-heading">✨ Карта желаний</h2>
+
+      <div class="card">
+        <h3>Добавить желание</h3>
+        <form id="visionForm" onsubmit="event.preventDefault(); addVision();">
+          <label for="vCategory">Категория</label>
+          <select id="vCategory" required aria-required="true">
+            <option value="💼 Карьера">💼 Карьера</option>
+            <option value="💰 Финансы">💰 Финансы</option>
+            <option value="❤️ Отношения">❤️ Отношения</option>
+            <option value="🏠 Дом">🏠 Дом</option>
+            <option value="✈️ Путешествия">✈️ Путешествия</option>
+            <option value="💪 Здоровье">💪 Здоровье</option>
+            <option value="🎨 Хобби">🎨 Хобби</option>
+            <option value="🎓 Образование">🎓 Образование</option>
+            <option value="🌟 Другое">🌟 Другое</option>
+          </select>
+
+          <label for="vTitle">Мечта/Желание</label>
+          <input type="text" placeholder="Например: Купить дом у моря" id="vTitle" required aria-required="true">
+
+          <label for="vDescription">Описание (необязательно)</label>
+          <textarea placeholder="Подробнее о мечте..." id="vDescription"></textarea>
+
+          <label for="vDeadline">К какому сроку (необязательно)</label>
+          <input type="date" id="vDeadline">
+
+          <button type="submit">Добавить на карту</button>
+        </form>
+      </div>
+
+      <div id="visionBoard" class="vision-board-grid"></div>
     </section>
 
   </main>
