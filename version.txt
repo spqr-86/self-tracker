@@ -1,0 +1,4 @@
+Version: 2.0.0
+Last updated: 2026-01-10 15:15
+Commit: a55eabe (navigation fix)
+All features working: navigation, forms, notifications, edit/delete
