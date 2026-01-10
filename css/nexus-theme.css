@@ -1864,3 +1864,46 @@ canvas {
     font-size: 18px;
   }
 }
+
+/* =====================
+   PERSONAL CODE TEXT EDITOR
+===================== */
+#personal-code-text {
+  scrollbar-width: thin;
+  scrollbar-color: var(--nexus-green) var(--nexus-surface);
+}
+
+#personal-code-text::-webkit-scrollbar {
+  width: 8px;
+}
+
+#personal-code-text::-webkit-scrollbar-track {
+  background: var(--nexus-surface);
+}
+
+#personal-code-text::-webkit-scrollbar-thumb {
+  background: var(--nexus-green);
+  border-radius: 4px;
+}
+
+#personal-code-text:focus {
+  outline: none;
+  border-color: var(--nexus-green);
+  box-shadow: var(--glow-soft);
+}
+
+#personal-code-text::placeholder {
+  color: var(--nexus-text-darker);
+  opacity: 0.6;
+}
+
+/* Эффект печатной машинки для текста кодекса */
+#personal-code-text {
+  letter-spacing: 0.5px;
+}
+
+/* Анимация для статуса сохранения */
+#code-save-status {
+  font-family: var(--font-mono);
+  letter-spacing: 1px;
+}
