@@ -1,416 +1,219 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Self-Tracker</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Self-Tracker - приложение для отслеживания тренировок, медитации, целей и достижений">
+  <title>Self-Tracker - Трекер саморазвития</title>
 
-<!-- Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/styles.css">
 
-<style>
-/* =========================
-   BASE
-========================= */
-:root {
-  --bg: #f7f7f7;
-  --card: #ffffff;
-  --text: #222;
-  --muted: #777;
-  --accent: #5b8def;
-  --success: #4caf50;
-  --danger: #e53935;
-}
-
-* {
-  box-sizing: border-box;
-  font-family: system-ui, -apple-system, sans-serif;
-}
-
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-}
-
-h2 {
-  margin-top: 0;
-}
-
-button {
-  cursor: pointer;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 6px;
-  background: var(--accent);
-  color: white;
-}
-
-button.secondary {
-  background: #ddd;
-  color: #000;
-}
-
-button.danger {
-  background: var(--danger);
-}
-
-input, select, textarea {
-  width: 100%;
-  padding: 8px;
-  margin-bottom: 8px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-}
-
-textarea {
-  resize: vertical;
-}
-
-/* =========================
-   LAYOUT
-========================= */
-.app {
-  display: flex;
-  min-height: 100vh;
-}
-
-nav {
-  width: 220px;
-  background: var(--card);
-  padding: 16px;
-}
-
-nav button {
-  width: 100%;
-  margin-bottom: 8px;
-  background: none;
-  color: var(--text);
-  text-align: left;
-}
-
-nav button.active {
-  background: var(--accent);
-  color: white;
-}
-
-main {
-  flex: 1;
-  padding: 16px;
-}
-
-.card {
-  background: var(--card);
-  padding: 16px;
-  border-radius: 12px;
-  margin-bottom: 16px;
-}
-
-/* =========================
-   MOBILE
-========================= */
-@media (max-width: 768px) {
-  .app {
-    flex-direction: column;
-  }
-  nav {
-    width: 100%;
-    display: flex;
-    overflow-x: auto;
-  }
-  nav button {
-    flex: 1;
-    white-space: nowrap;
-  }
-}
-</style>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
 </head>
 
 <body>
 
 <div class="app">
-  <nav>
-    <button class="active" onclick="showSection('workouts')">🏋️ Тренировки</button>
-    <button onclick="showSection('meditation')">🧘 Медитация</button>
-    <button onclick="showSection('code')">📜 Кодекс</button>
-    <button onclick="showSection('goals')">🎯 Цели</button>
-    <button onclick="showSection('motivation')">🔥 Мотивация</button>
+  <!-- Navigation -->
+  <nav role="navigation" aria-label="Основная навигация">
+    <button class="active" data-section="workouts" aria-label="Перейти к разделу тренировок">
+      🏋️ Тренировки
+    </button>
+    <button data-section="meditation" aria-label="Перейти к разделу медитации">
+      🧘 Медитация
+    </button>
+    <button data-section="code" aria-label="Перейти к кодексу">
+      📜 Кодекс
+    </button>
+    <button data-section="goals" aria-label="Перейти к целям">
+      🎯 Цели
+    </button>
+    <button data-section="motivation" aria-label="Перейти к мотивации">
+      🔥 Мотивация
+    </button>
+
     <hr>
-    <button onclick="exportData()">⬇️ Экспорт</button>
-    <button onclick="importData()">⬆️ Импорт</button>
+
+    <button onclick="exportData()" class="secondary" aria-label="Экспортировать данные">
+      ⬇️ Экспорт
+    </button>
+    <button onclick="importData()" class="secondary" aria-label="Импортировать данные">
+      ⬆️ Импорт
+    </button>
   </nav>
 
-  <main>
+  <!-- Main Content -->
+  <main role="main">
 
     <!-- ================= WORKOUTS ================= -->
-    <section id="workouts" class="section">
-      <h2>🏋️ Тренировки</h2>
+    <section id="workouts" class="section" aria-labelledby="workouts-heading">
+      <h2 id="workouts-heading">🏋️ Тренировки</h2>
 
       <div class="card">
         <h3>Добавить тренировку</h3>
-        <input type="date" id="wDate">
-        <input placeholder="Упражнение" id="wExercise">
-        <input type="number" placeholder="Подходы" id="wSets">
-        <input type="number" placeholder="Повторения" id="wReps">
-        <input type="number" placeholder="Вес" id="wWeight">
-        <input placeholder="YouTube ссылка" id="wVideo">
-        <button onclick="addWorkout()">Сохранить</button>
+        <form id="workoutForm" onsubmit="event.preventDefault(); addWorkout();">
+          <label for="wDate">Дата</label>
+          <input type="date" id="wDate" required aria-required="true">
+
+          <label for="wExercise">Упражнение</label>
+          <input type="text" placeholder="Например: Жим лёжа" id="wExercise" required aria-required="true">
+
+          <label for="wSets">Подходы</label>
+          <input type="number" placeholder="3" id="wSets" min="0">
+
+          <label for="wReps">Повторения</label>
+          <input type="number" placeholder="10" id="wReps" min="0">
+
+          <label for="wWeight">Вес (кг)</label>
+          <input type="number" placeholder="50" id="wWeight" min="0" step="0.5">
+
+          <label for="wVideo">YouTube ссылка (необязательно)</label>
+          <input type="url" placeholder="https://youtube.com/watch?v=..." id="wVideo">
+
+          <button type="submit">Сохранить</button>
+        </form>
       </div>
 
       <div class="card">
-        <h3>История</h3>
-        <ul id="workoutList"></ul>
+        <h3>История тренировок</h3>
+        <ul id="workoutList" aria-live="polite"></ul>
       </div>
 
       <div class="card">
         <h3>График прогресса</h3>
-        <canvas id="workoutChart"></canvas>
+        <div class="chart-container">
+          <canvas id="workoutChart" aria-label="График прогресса тренировок"></canvas>
+        </div>
       </div>
     </section>
 
     <!-- ================= MEDITATION ================= -->
-    <section id="meditation" class="section" style="display:none">
-      <h2>🧘 Медитация</h2>
+    <section id="meditation" class="section" style="display:none" aria-labelledby="meditation-heading">
+      <h2 id="meditation-heading">🧘 Медитация</h2>
 
       <div class="card">
-        <input type="date" id="mDate">
-        <input type="number" placeholder="Минуты" id="mMinutes">
-        <input placeholder="Тип практики" id="mType">
-        <textarea placeholder="Заметки" id="mNotes"></textarea>
-        <button onclick="addMeditation()">Сохранить</button>
+        <h3>Добавить сеанс медитации</h3>
+        <form id="meditationForm" onsubmit="event.preventDefault(); addMeditation();">
+          <label for="mDate">Дата</label>
+          <input type="date" id="mDate" required aria-required="true">
+
+          <label for="mMinutes">Минуты</label>
+          <input type="number" placeholder="10" id="mMinutes" min="1" required aria-required="true">
+
+          <label for="mType">Тип практики</label>
+          <input type="text" placeholder="Например: Випассана" id="mType">
+
+          <label for="mNotes">Заметки</label>
+          <textarea placeholder="Как прошла медитация?" id="mNotes"></textarea>
+
+          <button type="submit">Сохранить</button>
+        </form>
       </div>
 
       <div class="card">
         <h3>Статистика</h3>
-        <div id="meditationStats"></div>
+        <div id="meditationStats" aria-live="polite"></div>
       </div>
 
       <div class="card">
-        <h3>История</h3>
-        <ul id="meditationList"></ul>
+        <h3>История медитаций</h3>
+        <ul id="meditationList" aria-live="polite"></ul>
       </div>
     </section>
 
     <!-- ================= CODEX ================= -->
-    <section id="code" class="section" style="display:none">
-      <h2>📜 Мой Кодекс</h2>
+    <section id="code" class="section" style="display:none" aria-labelledby="code-heading">
+      <h2 id="code-heading">📜 Мой Кодекс</h2>
 
       <div class="card">
-        <input placeholder="Принцип" id="codeText">
-        <select id="codeCategory">
-          <option>Работа</option>
-          <option>Отношения</option>
-          <option>Здоровье</option>
-        </select>
-        <button onclick="addCode()">Добавить</button>
+        <h3>Добавить принцип</h3>
+        <form id="codeForm" onsubmit="event.preventDefault(); addCode();">
+          <label for="codeText">Принцип</label>
+          <input type="text" placeholder="Например: Не откладывать на завтра" id="codeText" required aria-required="true">
+
+          <label for="codeCategory">Категория</label>
+          <select id="codeCategory">
+            <option>Работа</option>
+            <option>Отношения</option>
+            <option>Здоровье</option>
+            <option>Финансы</option>
+            <option>Личное развитие</option>
+          </select>
+
+          <button type="submit">Добавить</button>
+        </form>
       </div>
 
-      <ul id="codeList"></ul>
+      <div class="card">
+        <h3>Мои принципы</h3>
+        <ul id="codeList" aria-live="polite"></ul>
+      </div>
     </section>
 
     <!-- ================= GOALS ================= -->
-    <section id="goals" class="section" style="display:none">
-      <h2>🎯 Цели</h2>
+    <section id="goals" class="section" style="display:none" aria-labelledby="goals-heading">
+      <h2 id="goals-heading">🎯 Цели</h2>
 
       <div class="card">
-        <input placeholder="Название" id="gName">
-        <select id="gType">
-          <option>Краткосрочная</option>
-          <option>Долгосрочная</option>
-        </select>
-        <input type="date" id="gDeadline">
-        <input type="number" placeholder="Прогресс %" id="gProgress">
-        <button onclick="addGoal()">Добавить</button>
+        <h3>Добавить цель</h3>
+        <form id="goalForm" onsubmit="event.preventDefault(); addGoal();">
+          <label for="gName">Название цели</label>
+          <input type="text" placeholder="Например: Пробежать марафон" id="gName" required aria-required="true">
+
+          <label for="gType">Тип</label>
+          <select id="gType">
+            <option>Краткосрочная</option>
+            <option>Долгосрочная</option>
+          </select>
+
+          <label for="gDeadline">Дедлайн (необязательно)</label>
+          <input type="date" id="gDeadline">
+
+          <label for="gProgress">Прогресс (%)</label>
+          <input type="number" placeholder="0" id="gProgress" min="0" max="100" value="0">
+
+          <button type="submit">Добавить</button>
+        </form>
       </div>
 
-      <ul id="goalList"></ul>
+      <div class="card">
+        <h3>Мои цели</h3>
+        <ul id="goalList" aria-live="polite"></ul>
+      </div>
     </section>
 
     <!-- ================= MOTIVATION ================= -->
-    <section id="motivation" class="section" style="display:none">
-      <h2>🔥 Мотивация</h2>
+    <section id="motivation" class="section" style="display:none" aria-labelledby="motivation-heading">
+      <h2 id="motivation-heading">🔥 Мотивация</h2>
 
-      <div class="card" id="randomQuote"></div>
+      <div id="randomQuote" class="card quote-card" aria-live="polite"></div>
 
       <div class="card">
-        <input placeholder="Достижение" id="aText">
-        <button onclick="addAchievement()">Добавить</button>
+        <h3>Добавить достижение</h3>
+        <form id="achievementForm" onsubmit="event.preventDefault(); addAchievement();">
+          <label for="aText">Достижение</label>
+          <input type="text" placeholder="Например: Выполнил 100 отжиманий" id="aText" required aria-required="true">
+
+          <button type="submit">Добавить</button>
+        </form>
       </div>
 
-      <ul id="achievementList"></ul>
+      <div class="card">
+        <h3>Мои достижения</h3>
+        <ul id="achievementList" aria-live="polite"></ul>
+      </div>
     </section>
 
   </main>
 </div>
 
-<script>
-/* ================= STORAGE ================= */
-const db = {
-  workouts: JSON.parse(localStorage.getItem('workouts') || '[]'),
-  meditations: JSON.parse(localStorage.getItem('meditations') || '[]'),
-  code: JSON.parse(localStorage.getItem('code') || '[]'),
-  goals: JSON.parse(localStorage.getItem('goals') || '[]'),
-  achievements: JSON.parse(localStorage.getItem('achievements') || '[]'),
-};
-
-function save() {
-  for (let k in db) localStorage.setItem(k, JSON.stringify(db[k]));
-}
-
-/* ================= NAV ================= */
-function showSection(id) {
-  document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
-  document.getElementById(id).style.display = 'block';
-  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
-}
-
-/* ================= WORKOUTS ================= */
-function addWorkout() {
-  db.workouts.push({
-    date: wDate.value,
-    exercise: wExercise.value,
-    sets: wSets.value,
-    reps: wReps.value,
-    weight: wWeight.value
-  });
-  save();
-  renderWorkouts();
-}
-
-function renderWorkouts() {
-  workoutList.innerHTML = '';
-  db.workouts.forEach(w => {
-    const li = document.createElement('li');
-    li.textContent = `${w.date} — ${w.exercise} ${w.weight}кг`;
-    workoutList.appendChild(li);
-  });
-  drawChart();
-}
-
-function drawChart() {
-  const data = db.workouts.map(w => w.weight);
-  const labels = db.workouts.map(w => w.date);
-  new Chart(workoutChart, {
-    type: 'line',
-    data: { labels, datasets: [{ label: 'Вес', data }] }
-  });
-}
-
-/* ================= MEDITATION ================= */
-function addMeditation() {
-  db.meditations.push({
-    date: mDate.value,
-    minutes: +mMinutes.value
-  });
-  save();
-  renderMeditation();
-}
-
-function renderMeditation() {
-  meditationList.innerHTML = '';
-  let total = 0;
-  db.meditations.forEach(m => {
-    total += m.minutes;
-    const li = document.createElement('li');
-    li.textContent = `${m.date} — ${m.minutes} мин`;
-    meditationList.appendChild(li);
-  });
-  meditationStats.textContent = `Всего минут: ${total}`;
-}
-
-/* ================= CODEX ================= */
-function addCode() {
-  db.code.push({ text: codeText.value, cat: codeCategory.value });
-  save();
-  renderCode();
-}
-
-function renderCode() {
-  codeList.innerHTML = '';
-  db.code.forEach(c => {
-    const li = document.createElement('li');
-    li.textContent = `[${c.cat}] ${c.text}`;
-    codeList.appendChild(li);
-  });
-}
-
-/* ================= GOALS ================= */
-function addGoal() {
-  db.goals.push({
-    name: gName.value,
-    type: gType.value,
-    deadline: gDeadline.value,
-    progress: gProgress.value
-  });
-  save();
-  renderGoals();
-}
-
-function renderGoals() {
-  goalList.innerHTML = '';
-  db.goals.forEach(g => {
-    const li = document.createElement('li');
-    li.innerHTML = `${g.name} — ${g.progress}%<progress max="100" value="${g.progress}"></progress>`;
-    goalList.appendChild(li);
-  });
-}
-
-/* ================= MOTIVATION ================= */
-const quotes = [
-  "Дисциплина сильнее мотивации",
-  "Маленькие шаги каждый день",
-  "Ты уже делаешь больше, чем вчера"
-];
-
-randomQuote.textContent = quotes[Math.floor(Math.random() * quotes.length)];
-
-function addAchievement() {
-  db.achievements.push({ text: aText.value, date: new Date().toLocaleDateString() });
-  save();
-  renderAchievements();
-}
-
-function renderAchievements() {
-  achievementList.innerHTML = '';
-  db.achievements.forEach(a => {
-    const li = document.createElement('li');
-    li.textContent = `${a.date} — ${a.text}`;
-    achievementList.appendChild(li);
-  });
-}
-
-/* ================= IMPORT / EXPORT ================= */
-function exportData() {
-  const blob = new Blob([JSON.stringify(db)], { type: 'application/json' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'selftracker.json';
-  a.click();
-}
-
-function importData() {
-  const input = document.createElement('input');
-  input.type = 'file';
-  input.onchange = e => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      Object.assign(db, JSON.parse(reader.result));
-      save();
-      location.reload();
-    };
-    reader.readAsText(e.target.files[0]);
-  };
-  input.click();
-}
-
-/* INIT */
-renderWorkouts();
-renderMeditation();
-renderCode();
-renderGoals();
-renderAchievements();
-</script>
+<!-- Scripts -->
+<script src="js/storage.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/app.js"></script>
 
 </body>
 </html>
