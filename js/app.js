@@ -700,9 +700,13 @@ function renderProgram() {
       content.appendChild(orderSpan);
       content.appendChild(text);
 
+      // Добавление YouTube ссылки
       if (p.video) {
         const videoLink = ui.createYoutubePreview(p.video);
-        if (videoLink) content.appendChild(videoLink);
+        if (videoLink) {
+          text.appendChild(document.createTextNode(' '));
+          text.appendChild(videoLink);
+        }
       }
 
       const actions = document.createElement('div');

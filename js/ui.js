@@ -214,14 +214,16 @@ class UIManager {
    * Создание YouTube preview
    */
   createYoutubePreview(url) {
-    if (!url) return null;
+    if (!url || url.trim() === '') return null;
+
+    // Нормализация URL
+    url = url.trim();
 
     // Извлечение ID видео из URL
     let videoId = null;
     const patterns = [
-      /youtube\.com\/watch\?v=([^&]+)/,
-      /youtu\.be\/([^?]+)/,
-      /youtube\.com\/embed\/([^?]+)/
+      /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&?#]+)/i,
+      /youtube\.com\/shorts\/([^&?#]+)/i
     ];
 
     for (let pattern of patterns) {
@@ -232,14 +234,13 @@ class UIManager {
       }
     }
 
-    if (!videoId) return null;
-
+    // Создание ссылки (даже если ID не извлечен, показываем ссылку)
     const link = document.createElement('a');
     link.href = url;
     link.target = '_blank';
     link.rel = 'noopener noreferrer';
     link.className = 'youtube-link';
-    link.textContent = '▶ Видео';
+    link.textContent = videoId ? '▶ Видео' : '🔗 Ссылка';
     link.setAttribute('aria-label', 'Открыть видео на YouTube');
 
     return link;
