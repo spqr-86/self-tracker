@@ -1250,6 +1250,11 @@ document.addEventListener('DOMContentLoaded', () => {
   initializeDates();
   renderAll();
 
+  // Инициализация Personal Code системы
+  if (typeof personalCodeManager !== 'undefined') {
+    personalCodeManager.updateUI();
+  }
+
   // Обновлять цитату при каждом открытии раздела мотивации
   const motivationNav = document.querySelector('[data-section="motivation"]');
   if (motivationNav) {

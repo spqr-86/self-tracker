@@ -40,6 +40,7 @@
       <button onclick="showSection('goals', event)">Цели</button>
       <button onclick="showSection('vision', event)">Карта</button>
       <button onclick="showSection('psych-test', event)">Тест</button>
+      <button onclick="showSection('personal-code', event)">Кодекс</button>
     </nav>
   </header>
 
@@ -160,6 +161,29 @@
         </div>
         <button onclick="showSection('workout-program', event)" style="margin-top: 12px; width: 100%;">
           ПОЛНАЯ ПРОГРАММА
+        </button>
+      </div>
+
+      <!-- PERSONAL CODE WIDGET (Normal) -->
+      <div class="bento-item" data-module="[PERK_SYS_01]">
+        <h3>ПЕРСОНАЛЬНЫЙ КОДЕКС</h3>
+        <div style="margin: 16px 0;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <span style="font-size: 11px; color: var(--nexus-text-dim);">РАЗБЛОКИРОВАНО</span>
+            <span style="font-size: 20px; font-weight: 700; color: var(--nexus-amber);" id="dashboard-perks-count">0 / 16</span>
+          </div>
+          <div style="margin-bottom: 12px;">
+            <div style="font-size: 11px; color: var(--nexus-text-dim); margin-bottom: 4px;">ДОСТУПНО</div>
+            <div style="font-size: 16px; color: var(--nexus-green); font-weight: 700;" id="dashboard-perks-available">0</div>
+          </div>
+          <div id="dashboard-active-perks" style="margin-top: 16px; display: flex; flex-wrap: wrap; gap: 8px;">
+            <p style="font-size: 11px; color: var(--nexus-green-dim); text-align: center; padding: 16px 0;">
+              НЕТ АКТИВНЫХ ПЕРКОВ
+            </p>
+          </div>
+        </div>
+        <button onclick="showSection('personal-code', event)" style="margin-top: 12px; width: 100%;">
+          ДЕРЕВО ПЕРКОВ
         </button>
       </div>
 
@@ -384,10 +408,85 @@
     </div>
   </section>
 
+  <!-- ========== PERSONAL CODE SECTION ========== -->
+  <section id="personal-code" class="section" style="display:none;">
+    <div class="card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+        <h2>[PERSONAL_CODE] ПЕРСОНАЛЬНЫЙ КОДЕКС</h2>
+        <div style="text-align: right;">
+          <div style="font-size: 12px; color: var(--nexus-text-dim); margin-bottom: 4px;">
+            РАЗБЛОКИРОВАНО ПЕРКОВ
+          </div>
+          <div style="font-size: 24px; color: var(--nexus-green); font-weight: 700;" id="perk-counter">
+            0 / 16
+          </div>
+        </div>
+      </div>
+
+      <p style="color: var(--nexus-text-dim); margin-bottom: 32px;">
+        Система постоянных улучшений и бонусов. Разблокируй перки, достигая определенного уровня статов.
+        Каждый перк дает постоянные преимущества.
+      </p>
+
+      <!-- Physical Perks -->
+      <div style="margin-bottom: 40px;">
+        <h3 style="color: var(--nexus-green); margin-bottom: 20px; display: flex; align-items: center; gap: 12px;">
+          <span style="font-size: 24px;">💪</span>
+          [PHYSICAL] ФИЗИЧЕСКИЕ ПЕРКИ
+        </h3>
+        <div id="perks-physical" class="perks-container"></div>
+      </div>
+
+      <!-- Mental Perks -->
+      <div style="margin-bottom: 40px;">
+        <h3 style="color: var(--nexus-green); margin-bottom: 20px; display: flex; align-items: center; gap: 12px;">
+          <span style="font-size: 24px;">🧠</span>
+          [MENTAL] МЕНТАЛЬНЫЕ ПЕРКИ
+        </h3>
+        <div id="perks-mental" class="perks-container"></div>
+      </div>
+
+      <!-- Spiritual Perks -->
+      <div style="margin-bottom: 40px;">
+        <h3 style="color: var(--nexus-green); margin-bottom: 20px; display: flex; align-items: center; gap: 12px;">
+          <span style="font-size: 24px;">🧘</span>
+          [SPIRITUAL] ДУХОВНЫЕ ПЕРКИ
+        </h3>
+        <div id="perks-spiritual" class="perks-container"></div>
+      </div>
+
+      <!-- Hybrid Perks -->
+      <div style="margin-bottom: 40px;">
+        <h3 style="color: var(--nexus-green); margin-bottom: 20px; display: flex; align-items: center; gap: 12px;">
+          <span style="font-size: 24px;">⚔️</span>
+          [HYBRID] ГИБРИДНЫЕ ПЕРКИ
+        </h3>
+        <div id="perks-hybrid" class="perks-container"></div>
+      </div>
+
+      <!-- Legend -->
+      <div style="margin-top: 40px; padding: 20px; background: var(--nexus-surface); border-radius: var(--radius-sm); border: 1px solid var(--nexus-border);">
+        <h4 style="color: var(--nexus-green); margin-bottom: 12px;">ЛЕГЕНДА</h4>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; font-size: 12px;">
+          <div>
+            <span style="color: var(--nexus-green);">🟢 ДОСТУПЕН</span> - можно разблокировать
+          </div>
+          <div>
+            <span style="color: var(--nexus-text-dim);">⚪ ЗАБЛОКИРОВАН</span> - не хватает статов
+          </div>
+          <div>
+            <span style="color: var(--nexus-amber);">✓ АКТИВЕН</span> - перк разблокирован
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Scripts -->
   <script src="js/storage.js"></script>
   <script src="js/ui.js"></script>
   <script src="js/stats.js"></script>
+  <script src="js/personal-code.js"></script>
   <script src="js/app.js"></script>
 
 </body>

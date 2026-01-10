@@ -1606,3 +1606,261 @@ canvas {
 .p-1 { padding: 8px; }
 .p-2 { padding: 16px; }
 .p-3 { padding: 24px; }
+
+/* =====================
+   PERSONAL CODE PERKS
+===================== */
+.perks-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.perk-card {
+  background: var(--nexus-surface);
+  border: 2px solid var(--nexus-border);
+  border-radius: var(--radius-sm);
+  padding: 20px;
+  display: flex;
+  gap: 16px;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Координатная сетка как на Bento Grid */
+.perk-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: radial-gradient(circle, var(--nexus-border-light) 1px, transparent 1px);
+  background-size: 16px 16px;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* Заблокирован - серый */
+.perk-card.locked {
+  opacity: 0.5;
+  filter: grayscale(1);
+}
+
+/* Доступен - зеленая рамка */
+.perk-card.available {
+  border-color: var(--nexus-green);
+  box-shadow: var(--glow-soft);
+}
+
+.perk-card.available:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--glow-medium);
+}
+
+/* Разблокирован - золотое свечение */
+.perk-card.unlocked {
+  border-color: var(--nexus-amber);
+  box-shadow: 0 0 12px rgba(255, 176, 0, 0.4);
+  background: linear-gradient(135deg, var(--nexus-surface) 0%, rgba(255, 176, 0, 0.05) 100%);
+}
+
+.perk-icon {
+  font-size: 48px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 8px currentColor);
+}
+
+.perk-info {
+  flex: 1;
+  position: relative;
+  z-index: 1;
+}
+
+.perk-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--nexus-green);
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+.perk-card.unlocked .perk-name {
+  color: var(--nexus-amber);
+}
+
+.perk-requirements {
+  font-size: 11px;
+  color: var(--nexus-text-dim);
+  margin-bottom: 8px;
+  font-family: var(--font-mono);
+}
+
+.perk-description {
+  font-size: 12px;
+  color: var(--nexus-text);
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+.perk-unlock-btn {
+  background: var(--nexus-green);
+  color: var(--nexus-void);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: var(--transition);
+  text-transform: uppercase;
+}
+
+.perk-unlock-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 16px rgba(0, 255, 65, 0.6);
+}
+
+.perk-status {
+  font-size: 12px;
+  color: var(--nexus-amber);
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+/* Анимация разблокировки перка */
+.perk-unlock-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease;
+}
+
+.perk-unlock-overlay.fade-out {
+  animation: fadeOut 0.5s ease forwards;
+}
+
+.perk-unlock-content {
+  background: var(--nexus-black);
+  border: 3px solid var(--nexus-amber);
+  border-radius: var(--radius);
+  padding: 48px;
+  text-align: center;
+  box-shadow: 0 0 32px rgba(255, 176, 0, 0.6);
+  animation: perkUnlockPulse 0.5s ease;
+}
+
+.perk-unlock-icon {
+  font-size: 96px;
+  margin-bottom: 24px;
+  animation: perkIconSpin 0.6s ease;
+}
+
+.perk-unlock-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--nexus-amber);
+  letter-spacing: 4px;
+  margin-bottom: 16px;
+  text-shadow: 0 0 16px rgba(255, 176, 0, 0.8);
+}
+
+.perk-unlock-name {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--nexus-green);
+  letter-spacing: 3px;
+  margin-bottom: 16px;
+}
+
+.perk-unlock-description {
+  font-size: 14px;
+  color: var(--nexus-text);
+  line-height: 1.6;
+  max-width: 400px;
+}
+
+@keyframes perkUnlockPulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes perkIconSpin {
+  0% {
+    transform: rotate(-180deg) scale(0);
+  }
+  100% {
+    transform: rotate(0deg) scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Mobile адаптация для перков */
+@media (max-width: 768px) {
+  .perks-container {
+    grid-template-columns: 1fr;
+  }
+
+  .perk-card {
+    padding: 16px;
+  }
+
+  .perk-icon {
+    font-size: 36px;
+  }
+
+  .perk-unlock-content {
+    padding: 32px 24px;
+    margin: 20px;
+  }
+
+  .perk-unlock-icon {
+    font-size: 64px;
+  }
+
+  .perk-unlock-title {
+    font-size: 24px;
+    letter-spacing: 2px;
+  }
+
+  .perk-unlock-name {
+    font-size: 18px;
+  }
+}
