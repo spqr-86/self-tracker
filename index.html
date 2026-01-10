@@ -12,33 +12,40 @@
 
   <!-- HEADER -->
   <header>
-    <h1>NEXUS OS</h1>
-    <p style="font-size: 12px; color: var(--nexus-green-dim); margin-top: 8px; letter-spacing: 2px;">
-      PERSONAL LIFE OPERATING SYSTEM v1.0.0
-    </p>
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <h1>NEXUS OS</h1>
+        <p style="font-size: 12px; color: var(--nexus-green-dim); margin-top: 8px; letter-spacing: 2px;">
+          ПЕРСОНАЛЬНАЯ ОПЕРАЦИОННАЯ СИСТЕМА ЖИЗНИ v2.0.0
+        </p>
+      </div>
+      <button onclick="toggleTheme()" id="theme-toggle" style="padding: 10px 16px; border-radius: 8px;" title="Переключить тему">
+        <span id="theme-icon">🌙</span>
+      </button>
+    </div>
 
     <nav>
-      <button onclick="showSection('dashboard', event)" class="active">Dashboard</button>
-      <button onclick="showSection('workout-program', event)">Program</button>
-      <button onclick="showSection('workouts', event)">Workouts</button>
-      <button onclick="showSection('meditation', event)">Meditation</button>
-      <button onclick="showSection('coding', event)">Coding</button>
-      <button onclick="showSection('goals', event)">Goals</button>
-      <button onclick="showSection('vision', event)">Vision</button>
-      <button onclick="showSection('psych-test', event)">Test</button>
+      <button onclick="showSection('dashboard', event)" class="active">Дашборд</button>
+      <button onclick="showSection('workout-program', event)">Программа</button>
+      <button onclick="showSection('workouts', event)">Тренировки</button>
+      <button onclick="showSection('meditation', event)">Медитация</button>
+      <button onclick="showSection('coding', event)">Кодинг</button>
+      <button onclick="showSection('goals', event)">Цели</button>
+      <button onclick="showSection('vision', event)">Карта</button>
+      <button onclick="showSection('psych-test', event)">Тест</button>
     </nav>
   </header>
 
   <!-- ========== DASHBOARD SECTION ========== -->
   <section id="dashboard" class="section">
-    <h2>SYSTEM OVERVIEW</h2>
+    <h2>ОБЗОР СИСТЕМЫ</h2>
 
     <!-- BENTO GRID -->
     <div class="bento-grid">
 
       <!-- RPG STATS WIDGET (Wide) -->
       <div class="bento-item bento-wide" data-module="[STAT_SYS_01]">
-        <h3>CHARACTER STATS</h3>
+        <h3>СТАТЫ ПЕРСОНАЖА</h3>
         <div class="stats-grid">
           <div class="stat-card">
             <div class="stat-name">STR</div>
@@ -77,75 +84,75 @@
           </div>
         </div>
         <p style="font-size: 11px; color: var(--nexus-green-dark); margin-top: 12px; text-align: center;">
-          GAIN XP: WORKOUT +10 STR | MEDITATION +15 PER | CODE +20 INT | PSYCH TEST +10 WIL
+          ПОЛУЧЕНИЕ XP: ТРЕНИРОВКА +10 СИЛ | МЕДИТАЦИЯ +15 ВОС | КОД +20 ИНТ | ТЕСТ +10 ВОЛ
         </p>
       </div>
 
       <!-- WEIGHT TRACKER WIDGET -->
       <div class="bento-item" data-module="[BODY_MON_01]">
-        <h3>WEIGHT MONITOR</h3>
+        <h3>МОНИТОР ВЕСА</h3>
         <div style="text-align: center; padding: 20px;">
           <div style="font-size: 3rem; font-weight: bold; text-shadow: var(--nexus-glow-strong);" id="current-weight">
             --
           </div>
           <div style="font-size: 12px; color: var(--nexus-green-dim); margin-top: 8px;">
-            CURRENT MASS (KG)
+            ТЕКУЩАЯ МАССА (КГ)
           </div>
           <div style="margin-top: 16px; font-size: 14px;" id="weight-change">
-            DELTA: --
+            ИЗМЕНЕНИЕ: --
           </div>
           <button onclick="showSection('workouts', event)" style="margin-top: 16px; width: 100%;">
-            ADD WEIGHT DATA
+            ДОБАВИТЬ ВЕС
           </button>
         </div>
       </div>
 
       <!-- ACTIVITY SUMMARY -->
       <div class="bento-item" data-module="[ACT_LOG_01]">
-        <h3>ACTIVITY LOG</h3>
+        <h3>ЖУРНАЛ АКТИВНОСТИ</h3>
         <div style="padding: 10px 0;">
           <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--nexus-green-dark);">
-            <span style="color: var(--nexus-green-dim);">WORKOUTS:</span>
+            <span style="color: var(--nexus-green-dim);">ТРЕНИРОВКИ:</span>
             <span id="workout-count" style="font-weight: bold;">0</span>
           </div>
           <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--nexus-green-dark);">
-            <span style="color: var(--nexus-green-dim);">MEDITATIONS:</span>
+            <span style="color: var(--nexus-green-dim);">МЕДИТАЦИИ:</span>
             <span id="meditation-count" style="font-weight: bold;">0</span>
           </div>
           <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--nexus-green-dark);">
-            <span style="color: var(--nexus-green-dim);">CODE SESSIONS:</span>
+            <span style="color: var(--nexus-green-dim);">СЕССИИ КОДА:</span>
             <span id="code-count" style="font-weight: bold;">0</span>
           </div>
           <div style="display: flex; justify-content: space-between; padding: 12px 0;">
-            <span style="color: var(--nexus-green-dim);">ACTIVE GOALS:</span>
+            <span style="color: var(--nexus-green-dim);">АКТИВНЫЕ ЦЕЛИ:</span>
             <span id="goals-count" style="font-weight: bold;">0</span>
           </div>
         </div>
       </div>
 
-      <!-- GOALS WIDGET -->
-      <div class="bento-item" data-module="[GOAL_TRK_01]">
-        <h3>ACTIVE MISSIONS</h3>
+      <!-- ЦЕЛЬS WIDGET -->
+      <div class="bento-item" data-module="[ЦЕЛЬ_TRK_01]">
+        <h3>АКТИВНЫЕ МИССИИ</h3>
         <ul id="dashboard-goals" style="max-height: 200px; overflow-y: auto;">
           <li class="list-item" style="font-size: 12px; padding: 8px; color: var(--nexus-green-dim);">
-            NO ACTIVE MISSIONS
+            НЕТ АКТИВНЫХ МИССИЙ
           </li>
         </ul>
         <button onclick="showSection('goals', event)" style="margin-top: 12px; width: 100%;">
-          MANAGE GOALS
+          УПРАВЛЕНИЕ ЦЕЛЯМИ
         </button>
       </div>
 
       <!-- PROGRAM WIDGET (Wide) -->
       <div class="bento-item bento-wide" data-module="[PROG_DAY_01]">
-        <h3>TODAY'S TRAINING PROTOCOL</h3>
+        <h3>ПРОГРАММА НА СЕГОДНЯ</h3>
         <div id="dashboard-program">
           <p style="font-size: 12px; color: var(--nexus-green-dim); text-align: center; padding: 20px;">
-            NO SCHEDULED EXERCISES FOR TODAY
+            НА СЕГОДНЯ НЕТ УПРАЖНЕНИЙ
           </p>
         </div>
         <button onclick="showSection('workout-program', event)" style="margin-top: 12px; width: 100%;">
-          VIEW FULL PROGRAM
+          ПОЛНАЯ ПРОГРАММА
         </button>
       </div>
 
@@ -154,183 +161,183 @@
 
   <!-- ========== WORKOUT PROGRAM SECTION ========== -->
   <section id="workout-program" class="section" style="display:none" aria-labelledby="program-heading">
-    <h2 id="program-heading">TRAINING PROGRAM</h2>
+    <h2 id="program-heading">ПРОГРАММА ТРЕНИРОВОК</h2>
 
     <div class="card">
-      <h3>TUESDAY</h3>
+      <h3>ВТОРНИК</h3>
       <ul id="programTuesday" aria-live="polite"></ul>
     </div>
 
     <div class="card">
-      <h3>THURSDAY</h3>
+      <h3>ЧЕТВЕРГ</h3>
       <ul id="programThursday" aria-live="polite"></ul>
     </div>
 
     <div class="card">
-      <h3>SATURDAY</h3>
+      <h3>СУББОТА</h3>
       <ul id="programSaturday" aria-live="polite"></ul>
     </div>
 
     <div class="card">
-      <h3>ADD EXERCISE TO PROGRAM</h3>
+      <h3>ДОБАВИТЬ УПРАЖНЕНИЕ</h3>
       <form id="programForm" onsubmit="event.preventDefault(); addProgramExercise();">
-        <label for="pDay">DAY OF WEEK</label>
+        <label for="pDay">ДЕНЬ НЕДЕЛИ</label>
         <select id="pDay" required aria-required="true">
-          <option value="Вторник">TUESDAY</option>
-          <option value="Четверг">THURSDAY</option>
-          <option value="Суббота">SATURDAY</option>
+          <option value="Вторник">ВТОРНИК</option>
+          <option value="Четверг">ЧЕТВЕРГ</option>
+          <option value="Суббота">СУББОТА</option>
         </select>
 
-        <label for="pExercise">EXERCISE</label>
-        <input type="text" placeholder="E.g. Bench Press" id="pExercise" required aria-required="true">
+        <label for="pExercise">УПРАЖНЕНИЕ</label>
+        <input type="text" placeholder="Например: Жим лёжа" id="pExercise" required aria-required="true">
 
-        <label for="pSets">SETS</label>
+        <label for="pSets">ПОДХОДЫ</label>
         <input type="number" placeholder="3" id="pSets" min="1" required aria-required="true">
 
-        <label for="pReps">REPS</label>
+        <label for="pReps">ПОВТОРЕНИЯ</label>
         <input type="number" placeholder="10" id="pReps" min="1" required aria-required="true">
 
-        <label for="pWeight">WEIGHT (KG)</label>
+        <label for="pWeight">ВЕС (КГ)</label>
         <input type="number" placeholder="50" id="pWeight" min="0" step="0.5" required aria-required="true">
 
-        <label for="pVideo">YOUTUBE LINK</label>
+        <label for="pVideo">ССЫЛКА YOUTUBE</label>
         <input type="url" placeholder="https://youtube.com/watch?v=..." id="pVideo">
 
-        <button type="submit">ADD TO PROGRAM</button>
+        <button type="submit">ДОБАВИТЬ</button>
       </form>
     </div>
   </section>
 
   <!-- ========== WORKOUTS SECTION ========== -->
   <section id="workouts" class="section" style="display:none" aria-labelledby="workout-heading">
-    <h2 id="workout-heading">COMBAT TRAINING LOG</h2>
+    <h2 id="workout-heading">ЖУРНАЛ ТРЕНИРОВОК</h2>
 
     <div class="card">
       <canvas id="workoutChart" aria-label="Workout progress chart"></canvas>
     </div>
 
     <div class="card">
-      <h3>ADD WORKOUT</h3>
+      <h3>ДОБАВИТЬ ТРЕНИРОВКУ</h3>
       <form id="workoutForm" onsubmit="event.preventDefault(); addWorkout();">
-        <label for="wDate">DATE</label>
+        <label for="wDate">ДАТА</label>
         <input type="date" id="wDate" required aria-required="true">
 
-        <label for="wExercise">EXERCISE</label>
-        <input type="text" placeholder="E.g. Bench Press" id="wExercise" required aria-required="true">
+        <label for="wExercise">УПРАЖНЕНИЕ</label>
+        <input type="text" placeholder="Например: Жим лёжа" id="wExercise" required aria-required="true">
 
-        <label for="wSets">SETS</label>
+        <label for="wSets">ПОДХОДЫ</label>
         <input type="number" placeholder="3" id="wSets" min="0">
 
-        <label for="wReps">REPS</label>
+        <label for="wReps">ПОВТОРЕНИЯ</label>
         <input type="number" placeholder="10" id="wReps" min="0">
 
-        <label for="wWeight">WEIGHT (KG)</label>
+        <label for="wWeight">ВЕС (КГ)</label>
         <input type="number" placeholder="50" id="wWeight" min="0" step="0.5">
 
-        <button type="submit">SAVE WORKOUT</button>
+        <button type="submit">СОХРАНИТЬ</button>
       </form>
     </div>
 
     <div class="card">
-      <h3>WORKOUT HISTORY</h3>
+      <h3>ИСТОРИЯ ТРЕНИРОВОК</h3>
       <ul id="workoutList" aria-live="polite"></ul>
     </div>
   </section>
 
   <!-- ========== MEDITATION SECTION ========== -->
   <section id="meditation" class="section" style="display:none" aria-labelledby="meditation-heading">
-    <h2 id="meditation-heading">DEFRAGMENTATION MODULE</h2>
+    <h2 id="meditation-heading">МОДУЛЬ МЕДИТАЦИИ</h2>
 
     <div class="card">
       <canvas id="meditationChart" aria-label="Meditation progress chart"></canvas>
     </div>
 
     <div class="card">
-      <h3>ADD MEDITATION SESSION</h3>
+      <h3>ДОБАВИТЬ МЕДИТАЦИЮ</h3>
       <form id="meditationForm" onsubmit="event.preventDefault(); addMeditation();">
-        <label for="mDate">DATE</label>
+        <label for="mDate">ДАТА</label>
         <input type="date" id="mDate" required aria-required="true">
 
-        <label for="mDuration">DURATION (MINUTES)</label>
+        <label for="mDuration">ДЛИТЕЛЬНОСТЬ (МИН)</label>
         <input type="number" placeholder="10" id="mDuration" min="1" required aria-required="true">
 
-        <label for="mNote">NOTES</label>
-        <textarea id="mNote" placeholder="How did you feel?" rows="3"></textarea>
+        <label for="mNote">ЗАМЕТКИ</label>
+        <textarea id="mNote" placeholder="Как вы себя чувствовали?" rows="3"></textarea>
 
-        <button type="submit">SAVE SESSION</button>
+        <button type="submit">СОХРАНИТЬ</button>
       </form>
     </div>
 
     <div class="card">
-      <h3>MEDITATION LOG</h3>
+      <h3>ЖУРНАЛ МЕДИТАЦИЙ</h3>
       <ul id="meditationList" aria-live="polite"></ul>
     </div>
   </section>
 
   <!-- ========== CODING SECTION ========== -->
   <section id="coding" class="section" style="display:none" aria-labelledby="coding-heading">
-    <h2 id="coding-heading">INT TRAINING</h2>
+    <h2 id="coding-heading">ТРЕНИРОВКА ИНТЕЛЛЕКТА</h2>
 
     <div class="card">
       <canvas id="codingChart" aria-label="Coding progress chart"></canvas>
     </div>
 
     <div class="card">
-      <h3>ADD CODE SESSION</h3>
+      <h3>ДОБАВИТЬ СЕССИЮ</h3>
       <form id="codeForm" onsubmit="event.preventDefault(); addCodeSession();">
-        <label for="cDate">DATE</label>
+        <label for="cDate">ДАТА</label>
         <input type="date" id="cDate" required aria-required="true">
 
-        <label for="cHours">HOURS</label>
+        <label for="cHours">ЧАСЫ</label>
         <input type="number" placeholder="2" id="cHours" min="0.5" step="0.5" required aria-required="true">
 
-        <label for="cProject">PROJECT</label>
-        <input type="text" placeholder="E.g. Personal Website" id="cProject" required aria-required="true">
+        <label for="cProject">ПРОЕКТ</label>
+        <input type="text" placeholder="Например: Личный сайт" id="cProject" required aria-required="true">
 
-        <label for="cTech">TECHNOLOGIES</label>
-        <input type="text" placeholder="E.g. React, Node.js" id="cTech">
+        <label for="cTech">ТЕХНОЛОГИИ</label>
+        <input type="text" placeholder="Например: React, Node.js" id="cTech">
 
-        <button type="submit">SAVE SESSION</button>
+        <button type="submit">СОХРАНИТЬ</button>
       </form>
     </div>
 
     <div class="card">
-      <h3>CODE SESSION LOG</h3>
+      <h3>ЖУРНАЛ КОДА</h3>
       <ul id="codeList" aria-live="polite"></ul>
     </div>
   </section>
 
-  <!-- ========== GOALS SECTION ========== -->
+  <!-- ========== ЦЕЛЬS SECTION ========== -->
   <section id="goals" class="section" style="display:none" aria-labelledby="goals-heading">
-    <h2 id="goals-heading">MISSION OBJECTIVES</h2>
+    <h2 id="goals-heading">ЦЕЛИ И МИССИИ</h2>
 
     <div class="card">
-      <h3>ADD NEW GOAL</h3>
+      <h3>НОВАЯ ЦЕЛЬ</h3>
       <form id="goalForm" onsubmit="event.preventDefault(); addGoal();">
-        <label for="gGoal">GOAL</label>
-        <input type="text" placeholder="E.g. Lose 10kg" id="gGoal" required aria-required="true">
+        <label for="gGoal">ЦЕЛЬ</label>
+        <input type="text" placeholder="Например: Сбросить 10кг" id="gGoal" required aria-required="true">
 
-        <label for="gDeadline">TARGET DATE</label>
+        <label for="gDeadline">TARGET ДАТА</label>
         <input type="date" id="gDeadline" required aria-required="true">
 
-        <button type="submit">ADD GOAL</button>
+        <button type="submit">ADD ЦЕЛЬ</button>
       </form>
     </div>
 
     <div class="card">
-      <h3>ACTIVE GOALS</h3>
+      <h3>ACTIVE ЦЕЛЬS</h3>
       <ul id="goalList" aria-live="polite"></ul>
     </div>
 
     <div class="card">
-      <h3>ACHIEVEMENTS</h3>
+      <h3>ДОСТИЖЕНИЯ</h3>
       <ul id="achievementList" aria-live="polite"></ul>
     </div>
   </section>
 
   <!-- ========== VISION BOARD SECTION ========== -->
   <section id="vision" class="section" style="display:none" aria-labelledby="vision-heading">
-    <h2 id="vision-heading">VISION MAP</h2>
+    <h2 id="vision-heading">КАРТА ЖЕЛАНИЙ</h2>
 
     <div class="vision-grid" id="visionGrid">
       <!-- Vision cards will be rendered here -->
@@ -339,32 +346,32 @@
 
   <!-- ========== PSYCHOLOGICAL TEST SECTION ========== -->
   <section id="psych-test" class="section" style="display:none" aria-labelledby="test-heading">
-    <h2 id="test-heading">PSYCHOLOGICAL DIAGNOSTIC</h2>
+    <h2 id="test-heading">ПСИХОЛОГИЧЕСКИЙ ТЕСТ</h2>
 
     <div class="card">
-      <h3>DEPRESSION SCREENING (PHQ-9)</h3>
+      <h3>ТЕСТ НА ДЕПРЕССИЮ (PHQ-9)</h3>
       <p style="color: var(--nexus-green-dim); font-size: 12px; margin-bottom: 16px;">
-        Answer questions about how you've been feeling over the last 2 weeks.
+        Ответьте на вопросы о вашем самочувствии за последние 2 недели.
       </p>
 
       <form id="depressionTestForm">
         <div style="margin-bottom: 20px;">
           <label>1. Little interest or pleasure in doing things?</label>
           <div style="display: flex; gap: 16px; margin-top: 8px;">
-            <label><input type="radio" name="q1" value="0" required> Not at all</label>
-            <label><input type="radio" name="q1" value="1"> Several days</label>
-            <label><input type="radio" name="q1" value="2"> More than half</label>
-            <label><input type="radio" name="q1" value="3"> Nearly every day</label>
+            <label><input type="radio" name="q1" value="0" required> Совсем нет</label>
+            <label><input type="radio" name="q1" value="1"> Несколько дней</label>
+            <label><input type="radio" name="q1" value="2"> Больше половины</label>
+            <label><input type="radio" name="q1" value="3"> Почти каждый день</label>
           </div>
         </div>
 
         <!-- Additional questions would go here - keeping it short for MVP -->
 
-        <button type="button" onclick="calculateTestResult()">ANALYZE RESULTS</button>
+        <button type="button" onclick="calculateTestResult()">АНАЛИЗИРОВАТЬ</button>
       </form>
 
       <div id="testResult" style="margin-top: 20px; padding: 20px; border: 2px solid var(--nexus-green); display: none;">
-        <h3>DIAGNOSTIC RESULT</h3>
+        <h3>РЕЗУЛЬТАТ ДИАГНОСТИКИ</h3>
         <div id="testResultContent"></div>
       </div>
     </div>

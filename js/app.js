@@ -384,7 +384,7 @@ function addGoal() {
   };
 
   if (!data.goal || !data.deadline) {
-    ui.showError('Fill all required fields');
+    ui.showError('Заполните все обязательные поля');
     return;
   }
 
@@ -1089,7 +1089,7 @@ function renderCoding() {
   list.innerHTML = '';
 
   if (!storage.data.code || storage.data.code.length === 0) {
-    list.innerHTML = '<li class="list-item">NO CODE SESSIONS</li>';
+    list.innerHTML = '<li class="list-item">НЕТ СЕССИЙ КОДА</li>';
     return;
   }
 
@@ -1178,14 +1178,14 @@ function updateDashboardGoals() {
   list.innerHTML = '';
 
   if (!storage.data.goals || storage.data.goals.length === 0) {
-    list.innerHTML = '<li class="list-item" style="font-size: 12px; padding: 8px; color: var(--nexus-green-dim);">NO ACTIVE MISSIONS</li>';
+    list.innerHTML = '<li class="list-item" style="font-size: 12px; padding: 8px; color: var(--nexus-green-dim);">НЕТ АКТИВНЫХ МИССИЙ</li>';
     return;
   }
 
   const activeGoals = storage.data.goals.filter(g => !g.completed).slice(0, 3);
 
   if (activeGoals.length === 0) {
-    list.innerHTML = '<li class="list-item" style="font-size: 12px; padding: 8px; color: var(--nexus-green-dim);">NO ACTIVE MISSIONS</li>';
+    list.innerHTML = '<li class="list-item" style="font-size: 12px; padding: 8px; color: var(--nexus-green-dim);">НЕТ АКТИВНЫХ МИССИЙ</li>';
     return;
   }
 
@@ -1196,7 +1196,7 @@ function updateDashboardGoals() {
     li.style.padding = '8px';
 
     const text = document.createElement('div');
-    text.innerHTML = `<strong>${g.goal}</strong><br><span style="color: var(--nexus-green-dim);">TARGET: ${ui.formatDate(g.deadline)}</span>`;
+    text.innerHTML = `<strong>${g.goal}</strong><br><span style="color: var(--nexus-green-dim);">ЦЕЛЬ: ${ui.formatDate(g.deadline)}</span>`;
 
     li.appendChild(text);
     list.appendChild(li);
@@ -1212,14 +1212,14 @@ function updateTodaysProgram() {
   const today = days[new Date().getDay()];
 
   if (!storage.data.program) {
-    container.innerHTML = '<p style="font-size: 12px; color: var(--nexus-green-dim); text-align: center; padding: 20px;">NO SCHEDULED EXERCISES FOR TODAY</p>';
+    container.innerHTML = '<p style="font-size: 12px; color: var(--nexus-green-dim); text-align: center; padding: 20px;">НА СЕГОДНЯ НЕТ УПРАЖНЕНИЙ</p>';
     return;
   }
 
   const todaysExercises = storage.data.program.filter(p => p.day === today);
 
   if (todaysExercises.length === 0) {
-    container.innerHTML = '<p style="font-size: 12px; color: var(--nexus-green-dim); text-align: center; padding: 20px;">NO SCHEDULED EXERCISES FOR TODAY</p>';
+    container.innerHTML = '<p style="font-size: 12px; color: var(--nexus-green-dim); text-align: center; padding: 20px;">НА СЕГОДНЯ НЕТ УПРАЖНЕНИЙ</p>';
     return;
   }
 
@@ -1261,3 +1261,35 @@ document.addEventListener('DOMContentLoaded', () => {
 window.addEventListener('beforeunload', () => {
   storage.save();
 });
+
+/* =========================
+   THEME TOGGLE
+========================= */
+function toggleTheme() {
+  const html = document.documentElement;
+  const currentTheme = html.getAttribute('data-theme');
+  const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+  
+  html.setAttribute('data-theme', newTheme);
+  localStorage.setItem('nexusTheme', newTheme);
+  
+  // Update theme toggle icon
+  const icon = document.getElementById('theme-icon');
+  if (icon) {
+    icon.textContent = newTheme === 'light' ? '☀️' : '🌙';
+  }
+}
+
+// Initialize theme from localStorage
+function initTheme() {
+  const savedTheme = localStorage.getItem('nexusTheme') || 'dark';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  
+  const icon = document.getElementById('theme-icon');
+  if (icon) {
+    icon.textContent = savedTheme === 'light' ? '☀️' : '🌙';
+  }
+}
+
+// Call initTheme before DOMContentLoaded
+initTheme();
