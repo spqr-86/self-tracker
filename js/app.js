@@ -1312,3 +1312,70 @@ function initTheme() {
 
 // Call initTheme before DOMContentLoaded
 initTheme();
+
+/* =========================
+   PERSONAL CODE TEXT
+========================= */
+// Сохранить текстовый кодекс
+function savePersonalCodeText() {
+  const textarea = document.getElementById('personal-code-text');
+  if (!textarea) return;
+
+  const codeText = textarea.value;
+  localStorage.setItem('nexusPersonalCodeText', codeText);
+
+  // Показать статус сохранения
+  const status = document.getElementById('code-save-status');
+  if (status) {
+    status.style.opacity = '1';
+    setTimeout(() => {
+      status.style.opacity = '0';
+    }, 2000);
+  }
+
+  console.log('Personal Code saved:', codeText.length, 'characters');
+}
+
+// Загрузить текстовый кодекс
+function loadPersonalCodeText() {
+  const textarea = document.getElementById('personal-code-text');
+  if (!textarea) return;
+
+  const savedCode = localStorage.getItem('nexusPersonalCodeText');
+  if (savedCode) {
+    textarea.value = savedCode;
+  }
+}
+
+// Очистить текстовый кодекс
+function clearPersonalCodeText() {
+  if (!confirm('Вы уверены, что хотите очистить свой персональный кодекс?')) {
+    return;
+  }
+
+  const textarea = document.getElementById('personal-code-text');
+  if (textarea) {
+    textarea.value = '';
+    localStorage.removeItem('nexusPersonalCodeText');
+  }
+}
+
+// Автосохранение при вводе (debounced)
+let codeTextTimeout;
+function autoSavePersonalCodeText() {
+  clearTimeout(codeTextTimeout);
+  codeTextTimeout = setTimeout(() => {
+    savePersonalCodeText();
+  }, 1000);
+}
+
+// Добавить обработчик автосохранения при загрузке
+document.addEventListener('DOMContentLoaded', () => {
+  loadPersonalCodeText();
+
+  const textarea = document.getElementById('personal-code-text');
+  if (textarea) {
+    // Автосохранение при вводе
+    textarea.addEventListener('input', autoSavePersonalCodeText);
+  }
+});
