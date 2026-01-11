@@ -9,6 +9,7 @@
 function addWeight() {
   const date = document.getElementById('weightDate').value;
   const weight = parseFloat(document.getElementById('weightValue').value);
+  const bodyFat = document.getElementById('bodyFatValue').value;
   const note = document.getElementById('weightNote').value;
 
   if (!date || !weight) {
@@ -19,6 +20,7 @@ function addWeight() {
   const weightData = {
     date: date,
     weight: weight,
+    bodyFat: bodyFat ? parseFloat(bodyFat) : null,
     note: note,
     timestamp: new Date(date).getTime()
   };
@@ -35,6 +37,7 @@ function addWeight() {
 
   // Clear form
   document.getElementById('weightValue').value = '';
+  document.getElementById('bodyFatValue').value = '';
   document.getElementById('weightNote').value = '';
   document.getElementById('weightDate').valueAsDate = new Date();
 
@@ -42,7 +45,11 @@ function addWeight() {
   updateWeightDisplay();
 
   // Show success message
-  alert('✓ Вес добавлен: ' + weight + ' кг');
+  let message = '✓ Вес добавлен: ' + weight + ' кг';
+  if (bodyFat) {
+    message += ', жир: ' + bodyFat + '%';
+  }
+  alert(message);
 }
 
 /**
@@ -86,6 +93,29 @@ function updateWeightDisplay() {
     document.getElementById('startingWeight').textContent = starting.toFixed(1);
     document.getElementById('weightChange').textContent = (change >= 0 ? '+' : '') + change.toFixed(1);
     document.getElementById('weightChange').style.color = change > 0 ? '#ff4444' : 'var(--nexus-green)';
+
+    // Update body fat stats if available
+    const currentBodyFat = history[history.length - 1].bodyFat;
+    const startingBodyFat = history[0].bodyFat;
+
+    if (currentBodyFat !== null && currentBodyFat !== undefined) {
+      const bodyFatChangeValue = startingBodyFat !== null && startingBodyFat !== undefined
+        ? currentBodyFat - startingBodyFat
+        : 0;
+
+      const currentBodyFatEl = document.getElementById('currentBodyFat');
+      const startingBodyFatEl = document.getElementById('startingBodyFat');
+      const bodyFatChangeEl = document.getElementById('bodyFatChange');
+
+      if (currentBodyFatEl) currentBodyFatEl.textContent = currentBodyFat.toFixed(1);
+      if (startingBodyFatEl && startingBodyFat !== null && startingBodyFat !== undefined) {
+        startingBodyFatEl.textContent = startingBodyFat.toFixed(1);
+      }
+      if (bodyFatChangeEl && startingBodyFat !== null && startingBodyFat !== undefined) {
+        bodyFatChangeEl.textContent = (bodyFatChangeValue >= 0 ? '+' : '') + bodyFatChangeValue.toFixed(1);
+        bodyFatChangeEl.style.color = bodyFatChangeValue > 0 ? '#ff4444' : 'var(--nexus-green)';
+      }
+    }
   }
 
   if (goal > 0) {
@@ -158,6 +188,11 @@ function renderWeightHistory() {
       changeHtml = `<div class="weight-history-change ${changeClass}">${changeSymbol}${change.toFixed(1)} кг</div>`;
     }
 
+    // Body fat display
+    const bodyFatHtml = item.bodyFat !== null && item.bodyFat !== undefined
+      ? `<div class="weight-history-bodyfat" style="font-size: 12px; color: var(--nexus-text-dim); margin-top: 2px;">Жир: ${item.bodyFat.toFixed(1)}%</div>`
+      : '';
+
     return `
       <div class="weight-history-item">
         <div>
@@ -166,6 +201,7 @@ function renderWeightHistory() {
         </div>
         <div style="text-align: right;">
           <div class="weight-history-value">${item.weight.toFixed(1)} кг</div>
+          ${bodyFatHtml}
           ${changeHtml}
         </div>
       </div>
