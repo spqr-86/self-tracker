@@ -40,7 +40,8 @@
       <button onclick="showSection('goals', event)">Цели</button>
       <button onclick="showSection('weight', event)">Вес</button>
       <button onclick="showSection('psych-test', event)">Тест</button>
-      <button onclick="showSection('personal-code', event)">Кодекс</button>
+      <button onclick="showSection('codex', event)">Кодекс</button>
+      <button onclick="showSection('perks', event)">Перки</button>
     </nav>
   </header>
 
@@ -791,11 +792,198 @@
     </div>
   </section>
 
-  <!-- ========== PERSONAL CODE SECTION ========== -->
-  <section id="personal-code" class="section" style="display:none;">
+  <!-- ========== CODEX SECTION ========== -->
+  <section id="codex" class="section" style="display:none;">
+    <div class="pipboy-screen">
+      <!-- Pip-Boy Header -->
+      <div class="pipboy-header">
+        <div class="pipboy-scanlines"></div>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <h2 style="color: #00ff00; font-family: var(--font-mono); font-size: 24px; margin: 0; text-shadow: 0 0 10px #00ff00;">
+              ПЕРСОНАЛЬНЫЙ КОДЕКС
+            </h2>
+            <div style="font-size: 10px; color: #00ff0080; margin-top: 4px; letter-spacing: 2px;">
+              [VAULT-TEC PERSONAL CODE SYSTEM v1.0]
+            </div>
+          </div>
+          <div style="text-align: right;">
+            <div style="font-size: 11px; color: #00ff0080; margin-bottom: 4px;">STATUS</div>
+            <div style="font-size: 20px; color: #00ff00; font-weight: 700; font-family: var(--font-mono);">
+              ACTIVE
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content Area -->
+      <div class="pipboy-content">
+        <div style="display: grid; grid-template-columns: 200px 1fr; gap: 24px; align-items: start;">
+
+          <!-- Character Silhouette -->
+          <div class="vault-boy-container">
+            <svg viewBox="0 0 200 400" style="width: 100%; height: auto; filter: drop-shadow(0 0 8px #00ff00);">
+              <!-- Vault Boy Silhouette in style of Fallout -->
+              <g fill="#00ff00" opacity="0.9">
+                <!-- Head -->
+                <circle cx="100" cy="60" r="35"/>
+                <!-- Body -->
+                <rect x="75" y="95" width="50" height="80" rx="8"/>
+                <!-- Arms -->
+                <rect x="40" y="100" width="35" height="15" rx="7" transform="rotate(-20 57 107)"/>
+                <rect x="125" y="100" width="35" height="15" rx="7" transform="rotate(20 143 107)"/>
+                <!-- Legs -->
+                <rect x="75" y="175" width="20" height="90" rx="10"/>
+                <rect x="105" y="175" width="20" height="90" rx="10"/>
+                <!-- Thumbs up hand (left) -->
+                <circle cx="40" cy="115" r="12"/>
+                <rect x="35" y="105" width="10" height="15" rx="5"/>
+              </g>
+              <!-- SPECIAL stats outline -->
+              <text x="100" y="310" text-anchor="middle" fill="#00ff00" font-size="12" font-family="monospace" opacity="0.7">S.P.E.C.I.A.L</text>
+              <text x="100" y="330" text-anchor="middle" fill="#00ff00" font-size="10" font-family="monospace" opacity="0.5">STRENGTH</text>
+              <text x="100" y="345" text-anchor="middle" fill="#00ff00" font-size="10" font-family="monospace" opacity="0.5">PERCEPTION</text>
+              <text x="100" y="360" text-anchor="middle" fill="#00ff00" font-size="10" font-family="monospace" opacity="0.5">INTELLIGENCE</text>
+              <text x="100" y="375" text-anchor="middle" fill="#00ff00" font-size="10" font-family="monospace" opacity="0.5">WILLPOWER</text>
+            </svg>
+            <div style="margin-top: 12px; text-align: center; font-size: 11px; color: #00ff0080; font-family: var(--font-mono);">
+              VAULT DWELLER
+            </div>
+          </div>
+
+          <!-- Code Editor Area -->
+          <div style="position: relative;">
+            <!-- Terminal-style header -->
+            <div style="background: #001a00; border: 2px solid #00ff00; border-bottom: none; padding: 8px 16px; display: flex; justify-content: space-between; align-items: center;">
+              <span style="color: #00ff00; font-size: 11px; font-family: var(--font-mono);">
+                &gt; PERSONAL_CODE.TXT
+              </span>
+              <span style="color: #00ff0060; font-size: 10px; font-family: var(--font-mono);">
+                READ/WRITE
+              </span>
+            </div>
+
+            <!-- Text Editor -->
+            <textarea
+              id="personal-code-text"
+              placeholder="> ВВЕДИТЕ ВАШ ПЕРСОНАЛЬНЫЙ КОДЕКС...
+
+ПРИМЕР:
+----------------------------------------
+1. ЧЕСТНОСТЬ ПРЕВЫШЕ ВСЕГО
+2. ДЕРЖУ ДАННОЕ СЛОВО
+3. РАЗВИВАЮСЬ КАЖДЫЙ ДЕНЬ
+4. ПОМОГАЮ ТЕМ, КТО НУЖДАЕТСЯ
+5. НЕ СДАЮСЬ ПЕРЕД ТРУДНОСТЯМИ
+6. УВАЖАЮ СЕБЯ И ДРУГИХ
+7. ПРИНИМАЮ ОТВЕТСТВЕННОСТЬ ЗА СВОИ ДЕЙСТВИЯ
+----------------------------------------"
+              style="
+                width: 100%;
+                min-height: 400px;
+                background: #001a00;
+                color: #00ff00;
+                border: 2px solid #00ff00;
+                border-top: none;
+                padding: 20px;
+                font-family: 'Courier New', monospace;
+                font-size: 14px;
+                line-height: 1.8;
+                resize: vertical;
+                box-shadow: inset 0 0 30px rgba(0, 255, 0, 0.1);
+                text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+              "
+              onchange="savePersonalCodeText()"
+            ></textarea>
+
+            <!-- Terminal-style footer with buttons -->
+            <div style="background: #001a00; border: 2px solid #00ff00; border-top: none; padding: 12px 16px; display: flex; gap: 12px;">
+              <button
+                onclick="savePersonalCodeText()"
+                style="
+                  flex: 1;
+                  background: #003300;
+                  border: 2px solid #00ff00;
+                  color: #00ff00;
+                  padding: 10px 20px;
+                  font-family: var(--font-mono);
+                  font-size: 12px;
+                  cursor: pointer;
+                  text-shadow: 0 0 5px #00ff00;
+                  transition: all 0.2s;
+                "
+                onmouseover="this.style.background='#004400'; this.style.boxShadow='0 0 15px rgba(0,255,0,0.5)'"
+                onmouseout="this.style.background='#003300'; this.style.boxShadow='none'"
+              >
+                [F1] СОХРАНИТЬ
+              </button>
+              <button
+                onclick="clearPersonalCodeText()"
+                style="
+                  background: #1a0000;
+                  border: 2px solid #ff0000;
+                  color: #ff0000;
+                  padding: 10px 20px;
+                  font-family: var(--font-mono);
+                  font-size: 12px;
+                  cursor: pointer;
+                  text-shadow: 0 0 5px #ff0000;
+                  transition: all 0.2s;
+                "
+                onmouseover="this.style.background='#330000'; this.style.boxShadow='0 0 15px rgba(255,0,0,0.5)'"
+                onmouseout="this.style.background='#1a0000'; this.style.boxShadow='none'"
+              >
+                [DEL] ОЧИСТИТЬ
+              </button>
+            </div>
+
+            <!-- Save status indicator -->
+            <div id="code-save-status" style="
+              margin-top: 12px;
+              padding: 8px 16px;
+              font-size: 11px;
+              color: #00ff00;
+              background: #001a00;
+              border: 1px solid #00ff00;
+              font-family: var(--font-mono);
+              opacity: 0;
+              transition: opacity 0.3s;
+              text-align: center;
+            ">
+              ✓ КОДЕКС СОХРАНЕН В СИСТЕМЕ
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Info Panel -->
+        <div style="margin-top: 32px; background: #001a00; border: 2px solid #00ff00; padding: 20px;">
+          <div style="color: #00ff00; font-family: var(--font-mono); font-size: 13px; line-height: 1.8;">
+            <div style="color: #00ff00cc; margin-bottom: 12px; font-size: 11px; letter-spacing: 1px;">
+              [INFO] ЧТО ТАКОЕ ПЕРСОНАЛЬНЫЙ КОДЕКС?
+            </div>
+            <div style="color: #00ff0099;">
+              Персональный Кодекс - это набор твоих жизненных принципов, правил и ценностей.
+              Это фундамент твоей личности, компас в сложных ситуациях.
+              <br><br>
+              Запиши здесь правила, по которым ты живешь или хочешь жить.
+              Это твой личный моральный кодекс, который поможет принимать верные решения.
+              <br><br>
+              <span style="color: #00ff00;">
+                💡 СОВЕТ: Перечитывай свой кодекс регулярно. Обновляй его по мере роста и развития.
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== PERKS SECTION ========== -->
+  <section id="perks" class="section" style="display:none;">
     <div class="card">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-        <h2>[PERSONAL_CODE] ПЕРСОНАЛЬНЫЙ КОДЕКС</h2>
+        <h2>[PERK_TREE] ДЕРЕВО ПЕРКОВ</h2>
         <div style="text-align: right;">
           <div style="font-size: 12px; color: var(--nexus-text-dim); margin-bottom: 4px;">
             РАЗБЛОКИРОВАНО ПЕРКОВ
@@ -855,70 +1043,6 @@
           💡 <strong>СОВЕТ:</strong> Смотри текущие уровни своих статов в дашборде (виджет "СТАТЫ ПЕРСОНАЖА")
         </div>
       </div>
-
-      <!-- MY PERSONAL CODE - Текстовый кодекс -->
-      <div style="margin-bottom: 48px; background: var(--nexus-surface); border: 2px solid var(--nexus-green); border-radius: var(--radius); padding: 24px; position: relative;">
-        <!-- Декоративная рамка -->
-        <div style="position: absolute; top: 8px; left: 8px; font-size: 10px; color: var(--nexus-green-dim); font-family: var(--font-mono);">
-          [CODE_EDITOR_01]
-        </div>
-
-        <h3 style="color: var(--nexus-green); margin-bottom: 16px; margin-top: 12px; display: flex; align-items: center; gap: 12px;">
-          <span style="font-size: 24px;">📜</span>
-          МОЙ ПЕРСОНАЛЬНЫЙ КОДЕКС
-        </h3>
-
-        <p style="font-size: 12px; color: var(--nexus-text-dim); margin-bottom: 16px;">
-          Твои личные принципы, правила жизни, философия. Запиши здесь свой кодекс чести, ценности и убеждения.
-        </p>
-
-        <textarea
-          id="personal-code-text"
-          placeholder="Напиши свой персональный кодекс здесь...
-
-Пример:
-1. Я честен перед собой и другими
-2. Я держу данное слово
-3. Я развиваюсь каждый день
-4. Я помогаю тем, кто нуждается
-5. Я не сдаюсь перед трудностями
-..."
-          style="
-            width: 100%;
-            min-height: 200px;
-            background: var(--nexus-black);
-            color: var(--nexus-text);
-            border: 1px solid var(--nexus-border);
-            border-radius: var(--radius-sm);
-            padding: 16px;
-            font-family: var(--font-mono);
-            font-size: 13px;
-            line-height: 1.8;
-            resize: vertical;
-            transition: var(--transition);
-          "
-          onchange="savePersonalCodeText()"
-        ></textarea>
-
-        <div style="display: flex; gap: 12px; margin-top: 16px;">
-          <button onclick="savePersonalCodeText()" style="flex: 1;">
-            💾 СОХРАНИТЬ КОДЕКС
-          </button>
-          <button onclick="clearPersonalCodeText()" style="background: var(--nexus-surface); border: 1px solid var(--nexus-border); flex: 0.3;">
-            🗑️ ОЧИСТИТЬ
-          </button>
-        </div>
-
-        <div id="code-save-status" style="margin-top: 12px; font-size: 11px; color: var(--nexus-green); opacity: 0; transition: opacity 0.3s;">
-          ✓ Кодекс сохранен
-        </div>
-      </div>
-
-      <hr style="border: none; border-top: 1px solid var(--nexus-border); margin: 48px 0;">
-
-      <h3 style="color: var(--nexus-amber); margin-bottom: 24px; text-align: center; font-size: 18px; letter-spacing: 3px;">
-        ДЕРЕВО ПЕРКОВ
-      </h3>
 
       <!-- Physical Perks -->
       <div style="margin-bottom: 40px;">
