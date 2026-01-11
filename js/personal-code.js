@@ -339,9 +339,15 @@ class PersonalCodeManager {
       categories[perk.category].push({ ...perk, id: perkId });
     }
 
+    console.log('[PersonalCode] Категории перков:', categories);
+
     // Обновление каждой категории
     for (const [category, perks] of Object.entries(categories)) {
       const container = document.getElementById(`perks-${category.toLowerCase()}`);
+
+      console.log(`[PersonalCode] Контейнер для ${category}:`, container);
+      console.log(`[PersonalCode] Перков в категории ${category}:`, perks.length);
+
       if (!container) continue;
 
       container.innerHTML = perks.map(perk => {
