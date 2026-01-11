@@ -238,8 +238,6 @@ class PersonalCodeManager {
     if (this.unlockedPerks.includes(perkId)) return false;
 
     // Проверка требований статов
-    if (typeof statsManager === 'undefined') return false;
-
     const stats = statsManager.stats;
     for (const [statName, requiredLevel] of Object.entries(perk.requirements)) {
       if (!stats[statName] || stats[statName].value < requiredLevel) {
