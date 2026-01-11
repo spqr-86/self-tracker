@@ -11,8 +11,7 @@ class StorageManager {
       goals: [],
       achievements: [],
       program: [],
-      testResults: [],
-      visions: []
+      testResults: []
     };
     this.load();
   }
@@ -128,13 +127,6 @@ class StorageManager {
     if (isNaN(data.score) || data.score < 0 || data.score > 45) return 'Некорректный результат теста';
     return null;
   }
-
-  validateVision(data) {
-    if (!data.category) return 'Выберите категорию';
-    if (!data.title || data.title.trim() === '') return 'Укажите желание';
-    return null;
-  }
-
   /**
    * Санитизация текста для защиты от XSS
    */
@@ -256,7 +248,7 @@ class StorageManager {
           const imported = JSON.parse(reader.result);
 
           // Проверка структуры данных
-          const requiredKeys = ['workouts', 'meditations', 'code', 'goals', 'achievements', 'program', 'testResults', 'visions'];
+          const requiredKeys = ['workouts', 'meditations', 'code', 'goals', 'achievements', 'program', 'testResults'];
           const isValid = requiredKeys.every(key => Array.isArray(imported[key]));
 
           if (!isValid) {
