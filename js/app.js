@@ -66,6 +66,8 @@ function editWorkout(id) {
 
 function renderWorkouts() {
   const list = document.getElementById('workoutList');
+  if (!list) return;
+
   list.innerHTML = '';
 
   if (storage.data.workouts.length === 0) {
@@ -336,6 +338,8 @@ function deleteCode(id) {
 
 function renderCode() {
   const list = document.getElementById('codeList');
+  if (!list) return;
+
   list.innerHTML = '';
 
   if (storage.data.code.length === 0) {
@@ -430,6 +434,8 @@ function updateGoalProgress(id, newProgress) {
 
 function renderGoals() {
   const list = document.getElementById('goalList');
+  if (!list) return;
+
   list.innerHTML = '';
 
   if (storage.data.goals.length === 0) {
@@ -562,6 +568,8 @@ function deleteAchievement(id) {
 
 function renderAchievements() {
   const list = document.getElementById('achievementList');
+  if (!list) return;
+
   list.innerHTML = '';
 
   if (storage.data.achievements.length === 0) {
@@ -851,6 +859,13 @@ function deleteTestResult(id) {
 
 function renderTestHistory() {
   const list = document.getElementById('testHistory');
+
+  // Элемент может отсутствовать в HTML
+  if (!list) {
+    console.log('[App] testHistory элемент не найден, пропускаем рендеринг');
+    return;
+  }
+
   list.innerHTML = '';
 
   if (storage.data.testResults.length === 0) {
