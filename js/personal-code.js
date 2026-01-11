@@ -196,6 +196,18 @@ class PersonalCodeManager {
         requirements: { INT: 8, PER: 8, WIL: 8 },
         benefits: { qualityBonus: 1.5 },
         unlocked: false
+      },
+
+      gladiator: {
+        id: 'gladiator',
+        name: 'ГЛАДИАТОР',
+        nameEn: 'Gladiator',
+        category: 'HYBRID',
+        icon: '🏛️',
+        description: 'Сила и ловкость в бою. +35% к физическим характеристикам.',
+        requirements: { STR: 6, PER: 6 },
+        benefits: { physicalBonus: 1.35 },
+        unlocked: false
       }
     };
   }
