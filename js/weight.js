@@ -12,6 +12,8 @@ function addWeight() {
   const bodyFat = document.getElementById('bodyFatValue').value;
   const note = document.getElementById('weightNote').value;
 
+  console.log('[Weight] Форма - bodyFat значение:', bodyFat);
+
   if (!date || !weight) {
     alert('Пожалуйста, заполните дату и вес.');
     return;
@@ -25,6 +27,8 @@ function addWeight() {
     timestamp: new Date(date).getTime()
   };
 
+  console.log('[Weight] Создан weightData объект:', weightData);
+
   // Load existing data
   const history = getWeightHistory();
   history.push(weightData);
@@ -34,6 +38,7 @@ function addWeight() {
 
   // Save
   localStorage.setItem('nexusWeightHistory', JSON.stringify(history));
+  console.log('[Weight] Сохранено в localStorage:', history);
 
   // Clear form
   document.getElementById('weightValue').value = '';
@@ -57,7 +62,9 @@ function addWeight() {
  */
 function getWeightHistory() {
   const data = localStorage.getItem('nexusWeightHistory');
-  return data ? JSON.parse(data) : [];
+  const history = data ? JSON.parse(data) : [];
+  console.log('[Weight] Загружено из localStorage:', history);
+  return history;
 }
 
 /**
@@ -158,6 +165,8 @@ function renderWeightHistory() {
   const history = getWeightHistory();
   const container = document.getElementById('weightHistory');
 
+  console.log('[Weight] Рендеринг истории, записей:', history.length);
+
   if (history.length === 0) {
     container.innerHTML = `
       <div class="weight-history-empty">
@@ -171,6 +180,7 @@ function renderWeightHistory() {
   const reversed = [...history].reverse();
 
   const html = reversed.map((item, index) => {
+    console.log('[Weight] Рендеринг записи:', item, 'bodyFat:', item.bodyFat);
     const date = new Date(item.date);
     const dateStr = date.toLocaleDateString('ru-RU', {
       year: 'numeric',
