@@ -240,7 +240,9 @@ function renderMeditation() {
 
   if (storage.data.meditations.length === 0) {
     list.innerHTML = '<li class="list-item">Нет записей</li>';
-    statsDiv.innerHTML = '<div class="stat-card"><span class="stat-value">0</span><span class="stat-label">Минут всего</span></div>';
+    if (statsDiv) {
+      statsDiv.innerHTML = '<div class="stat-card"><span class="stat-value">0</span><span class="stat-label">Минут всего</span></div>';
+    }
     return;
   }
 
@@ -290,23 +292,25 @@ function renderMeditation() {
   });
 
   // Обновление статистики
-  const avgMinutes = Math.round(totalMinutes / totalSessions);
-  statsDiv.innerHTML = `
-    <div class="stats-grid">
-      <div class="stat-card">
-        <span class="stat-value">${totalMinutes}</span>
-        <span class="stat-label">Минут всего</span>
+  if (statsDiv) {
+    const avgMinutes = Math.round(totalMinutes / totalSessions);
+    statsDiv.innerHTML = `
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-value">${totalMinutes}</span>
+          <span class="stat-label">Минут всего</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value">${totalSessions}</span>
+          <span class="stat-label">Сессий</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value">${avgMinutes}</span>
+          <span class="stat-label">Среднее</span>
+        </div>
       </div>
-      <div class="stat-card">
-        <span class="stat-value">${totalSessions}</span>
-        <span class="stat-label">Сессий</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-value">${avgMinutes}</span>
-        <span class="stat-label">Среднее</span>
-      </div>
-    </div>
-  `;
+    `;
+  }
 }
 
 /* =========================
