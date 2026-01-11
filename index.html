@@ -531,14 +531,14 @@
 
   <!-- ========== PSYCHOLOGICAL TEST SECTION ========== -->
   <section id="psych-test" class="section" style="display:none" aria-labelledby="test-heading">
-    <h2 id="test-heading">[PHQ-15] ТЕСТ СОМАТИЧЕСКИХ СИМПТОМОВ</h2>
+    <h2 id="test-heading">ТЕСТ ДЕПРЕССИЯ</h2>
 
     <div class="card">
       <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 24px;">
         <div>
-          <h3>PHQ-15 - Оценка физических симптомов</h3>
+          <h3>Психологический тест для оценки депрессии</h3>
           <p style="color: var(--nexus-green-dim); font-size: 12px; margin-top: 8px;">
-            Patient Health Questionnaire-15 (PHQ-15) - стандартизированный тест для оценки соматических симптомов.
+            Стандартизированный тест для оценки уровня депрессии. 15 вопросов о вашем эмоциональном состоянии.
           </p>
         </div>
         <button onclick="showPHQ15History()" style="padding: 8px 16px; font-size: 11px;">
@@ -547,157 +547,172 @@
       </div>
 
       <p style="color: var(--nexus-text-dim); font-size: 13px; margin-bottom: 24px; line-height: 1.6;">
-        Насколько вас беспокоили следующие проблемы <strong>в течение последних 4 недель</strong>?
+        Как часто вы испытывали следующие симптомы <strong>в течение последних 2 недель</strong>?
       </p>
 
       <form id="phq15Form">
         <!-- Question 1 -->
         <div class="test-question">
-          <label class="test-question-label">1. Боли в животе или желудке</label>
+          <label class="test-question-label">1. Грусть: вам грустно или вы в плохом настроении?</label>
           <div class="test-options">
-            <label><input type="radio" name="q1" value="0" required> Совсем не беспокоит</label>
-            <label><input type="radio" name="q1" value="1"> Немного беспокоит</label>
-            <label><input type="radio" name="q1" value="2"> Сильно беспокоит</label>
+            <label><input type="radio" name="q1" value="0" required> Ни разу</label>
+            <label><input type="radio" name="q1" value="1"> Иногда</label>
+            <label><input type="radio" name="q1" value="2"> Умеренно</label>
+            <label><input type="radio" name="q1" value="3"> Часто</label>
           </div>
         </div>
 
         <!-- Question 2 -->
         <div class="test-question">
-          <label class="test-question-label">2. Боли в спине</label>
+          <label class="test-question-label">2. Уныние: вы испытываете чувство безнадежности?</label>
           <div class="test-options">
-            <label><input type="radio" name="q2" value="0" required> Совсем не беспокоит</label>
-            <label><input type="radio" name="q2" value="1"> Немного беспокоит</label>
-            <label><input type="radio" name="q2" value="2"> Сильно беспокоит</label>
+            <label><input type="radio" name="q2" value="0" required> Ни разу</label>
+            <label><input type="radio" name="q2" value="1"> Иногда</label>
+            <label><input type="radio" name="q2" value="2"> Умеренно</label>
+            <label><input type="radio" name="q2" value="3"> Часто</label>
           </div>
         </div>
 
         <!-- Question 3 -->
         <div class="test-question">
-          <label class="test-question-label">3. Боли в руках, ногах или суставах</label>
+          <label class="test-question-label">3. Низкая самооценка: вы испытываете чувство собственной ничтожности и непригодности?</label>
           <div class="test-options">
-            <label><input type="radio" name="q3" value="0" required> Совсем не беспокоит</label>
-            <label><input type="radio" name="q3" value="1"> Немного беспокоит</label>
-            <label><input type="radio" name="q3" value="2"> Сильно беспокоит</label>
+            <label><input type="radio" name="q3" value="0" required> Ни разу</label>
+            <label><input type="radio" name="q3" value="1"> Иногда</label>
+            <label><input type="radio" name="q3" value="2"> Умеренно</label>
+            <label><input type="radio" name="q3" value="3"> Часто</label>
           </div>
         </div>
 
         <!-- Question 4 -->
         <div class="test-question">
-          <label class="test-question-label">4. Менструальные боли или другие проблемы с менструацией (для женщин)</label>
+          <label class="test-question-label">4. Неполноценность: вы думаете, что вы хуже других?</label>
           <div class="test-options">
-            <label><input type="radio" name="q4" value="0" required> Совсем не беспокоит</label>
-            <label><input type="radio" name="q4" value="1"> Немного беспокоит</label>
-            <label><input type="radio" name="q4" value="2"> Сильно беспокоит</label>
+            <label><input type="radio" name="q4" value="0" required> Ни разу</label>
+            <label><input type="radio" name="q4" value="1"> Иногда</label>
+            <label><input type="radio" name="q4" value="2"> Умеренно</label>
+            <label><input type="radio" name="q4" value="3"> Часто</label>
           </div>
         </div>
 
         <!-- Question 5 -->
         <div class="test-question">
-          <label class="test-question-label">5. Головные боли</label>
+          <label class="test-question-label">5. Вина: вы критикуете и обвиняете самого себя?</label>
           <div class="test-options">
-            <label><input type="radio" name="q5" value="0" required> Совсем не беспокоит</label>
-            <label><input type="radio" name="q5" value="1"> Немного беспокоит</label>
-            <label><input type="radio" name="q5" value="2"> Сильно беспокоит</label>
+            <label><input type="radio" name="q5" value="0" required> Ни разу</label>
+            <label><input type="radio" name="q5" value="1"> Иногда</label>
+            <label><input type="radio" name="q5" value="2"> Умеренно</label>
+            <label><input type="radio" name="q5" value="3"> Часто</label>
           </div>
         </div>
 
         <!-- Question 6 -->
         <div class="test-question">
-          <label class="test-question-label">6. Боли в груди</label>
+          <label class="test-question-label">6. Нерешительность: вы испытываете трудности с принятием решений?</label>
           <div class="test-options">
-            <label><input type="radio" name="q6" value="0" required> Совсем не беспокоит</label>
-            <label><input type="radio" name="q6" value="1"> Немного беспокоит</label>
-            <label><input type="radio" name="q6" value="2"> Сильно беспокоит</label>
+            <label><input type="radio" name="q6" value="0" required> Ни разу</label>
+            <label><input type="radio" name="q6" value="1"> Иногда</label>
+            <label><input type="radio" name="q6" value="2"> Умеренно</label>
+            <label><input type="radio" name="q6" value="3"> Часто</label>
           </div>
         </div>
 
         <!-- Question 7 -->
         <div class="test-question">
-          <label class="test-question-label">7. Головокружение</label>
+          <label class="test-question-label">7. Раздражительность: вы испытывали досаду или злость в течение долгого периода времени?</label>
           <div class="test-options">
-            <label><input type="radio" name="q7" value="0" required> Совсем не беспокоит</label>
-            <label><input type="radio" name="q7" value="1"> Немного беспокоит</label>
-            <label><input type="radio" name="q7" value="2"> Сильно беспокоит</label>
+            <label><input type="radio" name="q7" value="0" required> Ни разу</label>
+            <label><input type="radio" name="q7" value="1"> Иногда</label>
+            <label><input type="radio" name="q7" value="2"> Умеренно</label>
+            <label><input type="radio" name="q7" value="3"> Часто</label>
           </div>
         </div>
 
         <!-- Question 8 -->
         <div class="test-question">
-          <label class="test-question-label">8. Обмороки</label>
+          <label class="test-question-label">8. Потеря интереса к жизни: вы чувствуете потерю интереса к своей карьере, увлечениям, членам семьи и друзьям?</label>
           <div class="test-options">
-            <label><input type="radio" name="q8" value="0" required> Совсем не беспокоит</label>
-            <label><input type="radio" name="q8" value="1"> Немного беспокоит</label>
-            <label><input type="radio" name="q8" value="2"> Сильно беспокоит</label>
+            <label><input type="radio" name="q8" value="0" required> Ни разу</label>
+            <label><input type="radio" name="q8" value="1"> Иногда</label>
+            <label><input type="radio" name="q8" value="2"> Умеренно</label>
+            <label><input type="radio" name="q8" value="3"> Часто</label>
           </div>
         </div>
 
         <!-- Question 9 -->
         <div class="test-question">
-          <label class="test-question-label">9. Учащенное сердцебиение или тахикардия</label>
+          <label class="test-question-label">9. Потеря мотивации: вам приходится заставлять себя заниматься делами?</label>
           <div class="test-options">
-            <label><input type="radio" name="q9" value="0" required> Совсем не беспокоит</label>
-            <label><input type="radio" name="q9" value="1"> Немного беспокоит</label>
-            <label><input type="radio" name="q9" value="2"> Сильно беспокоит</label>
+            <label><input type="radio" name="q9" value="0" required> Ни разу</label>
+            <label><input type="radio" name="q9" value="1"> Иногда</label>
+            <label><input type="radio" name="q9" value="2"> Умеренно</label>
+            <label><input type="radio" name="q9" value="3"> Часто</label>
           </div>
         </div>
 
         <!-- Question 10 -->
         <div class="test-question">
-          <label class="test-question-label">10. Одышка</label>
+          <label class="test-question-label">10. Самовосприятие: вам кажется, что вы постарели или выглядите непривлекательно?</label>
           <div class="test-options">
-            <label><input type="radio" name="q10" value="0" required> Совсем не беспокоит</label>
-            <label><input type="radio" name="q10" value="1"> Немного беспокоит</label>
-            <label><input type="radio" name="q10" value="2"> Сильно беспокоит</label>
+            <label><input type="radio" name="q10" value="0" required> Ни разу</label>
+            <label><input type="radio" name="q10" value="1"> Иногда</label>
+            <label><input type="radio" name="q10" value="2"> Умеренно</label>
+            <label><input type="radio" name="q10" value="3"> Часто</label>
           </div>
         </div>
 
         <!-- Question 11 -->
         <div class="test-question">
-          <label class="test-question-label">11. Боль или проблемы во время полового акта</label>
+          <label class="test-question-label">11. Изменения аппетита: вы имеете сниженный или, наоборот, повышенный аппетит (или злоупотребляете алкоголем)?</label>
           <div class="test-options">
-            <label><input type="radio" name="q11" value="0" required> Совсем не беспокоит</label>
-            <label><input type="radio" name="q11" value="1"> Немного беспокоит</label>
-            <label><input type="radio" name="q11" value="2"> Сильно беспокоит</label>
+            <label><input type="radio" name="q11" value="0" required> Ни разу</label>
+            <label><input type="radio" name="q11" value="1"> Иногда</label>
+            <label><input type="radio" name="q11" value="2"> Умеренно</label>
+            <label><input type="radio" name="q11" value="3"> Часто</label>
           </div>
         </div>
 
         <!-- Question 12 -->
         <div class="test-question">
-          <label class="test-question-label">12. Запоры, диарея или расстройство желудка</label>
+          <label class="test-question-label">12. Изменения в характере сна: вы испытываете затруднения со сном или постоянно крайне утомлены и слишком много спите?</label>
           <div class="test-options">
-            <label><input type="radio" name="q12" value="0" required> Совсем не беспокоит</label>
-            <label><input type="radio" name="q12" value="1"> Немного беспокоит</label>
-            <label><input type="radio" name="q12" value="2"> Сильно беспокоит</label>
+            <label><input type="radio" name="q12" value="0" required> Ни разу</label>
+            <label><input type="radio" name="q12" value="1"> Иногда</label>
+            <label><input type="radio" name="q12" value="2"> Умеренно</label>
+            <label><input type="radio" name="q12" value="3"> Часто</label>
           </div>
         </div>
 
         <!-- Question 13 -->
         <div class="test-question">
-          <label class="test-question-label">13. Тошнота, газы или несварение</label>
+          <label class="test-question-label">13. Потеря либидо: вы замечаете потерю интереса к сексу</label>
           <div class="test-options">
-            <label><input type="radio" name="q13" value="0" required> Совсем не беспокоит</label>
-            <label><input type="radio" name="q13" value="1"> Немного беспокоит</label>
-            <label><input type="radio" name="q13" value="2"> Сильно беспокоит</label>
+            <label><input type="radio" name="q13" value="0" required> Ни разу</label>
+            <label><input type="radio" name="q13" value="1"> Иногда</label>
+            <label><input type="radio" name="q13" value="2"> Умеренно</label>
+            <label><input type="radio" name="q13" value="3"> Часто</label>
           </div>
         </div>
 
         <!-- Question 14 -->
         <div class="test-question">
-          <label class="test-question-label">14. Чувство усталости или недостаток энергии</label>
+          <label class="test-question-label">14. Озабоченность собственным состоянием: вы беспокоитесь по поводу своего здоровья?</label>
           <div class="test-options">
-            <label><input type="radio" name="q14" value="0" required> Совсем не беспокоит</label>
-            <label><input type="radio" name="q14" value="1"> Немного беспокоит</label>
-            <label><input type="radio" name="q14" value="2"> Сильно беспокоит</label>
+            <label><input type="radio" name="q14" value="0" required> Ни разу</label>
+            <label><input type="radio" name="q14" value="1"> Иногда</label>
+            <label><input type="radio" name="q14" value="2"> Умеренно</label>
+            <label><input type="radio" name="q14" value="3"> Часто</label>
           </div>
         </div>
 
         <!-- Question 15 -->
         <div class="test-question">
-          <label class="test-question-label">15. Проблемы со сном</label>
+          <label class="test-question-label">15. Суицидальные мысли или намерения: вас посещают мысли, что жизнь не стоит того и что лучше умереть?</label>
           <div class="test-options">
-            <label><input type="radio" name="q15" value="0" required> Совсем не беспокоит</label>
-            <label><input type="radio" name="q15" value="1"> Немного беспокоит</label>
-            <label><input type="radio" name="q15" value="2"> Сильно беспокоит</label>
+            <label><input type="radio" name="q15" value="0" required> Ни разу</label>
+            <label><input type="radio" name="q15" value="1"> Иногда</label>
+            <label><input type="radio" name="q15" value="2"> Умеренно</label>
+            <label><input type="radio" name="q15" value="3"> Часто</label>
           </div>
         </div>
 
@@ -722,7 +737,7 @@
 
       <!-- History Display -->
       <div id="phq15History" style="margin-top: 24px; display: none;">
-        <h3 style="margin-bottom: 16px;">История тестов PHQ-15</h3>
+        <h3 style="margin-bottom: 16px;">История тестов депрессии</h3>
         <div id="phq15HistoryContent"></div>
       </div>
     </div>
