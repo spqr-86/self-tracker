@@ -1119,7 +1119,11 @@ document.addEventListener('DOMContentLoaded', () => {
   renderAll();
 
   // Инициализация Personal Code системы
+  console.log('[App] Создание PersonalCodeManager...');
+  personalCodeManager = new PersonalCodeManager();
+  console.log('[App] PersonalCodeManager создан, вызов updateUI...');
   personalCodeManager.updateUI();
+  console.log('[App] updateUI завершен');
 
   // Обновлять цитату при каждом открытии раздела мотивации
   const motivationNav = document.querySelector('[data-section="motivation"]');

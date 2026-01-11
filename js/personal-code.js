@@ -465,5 +465,5 @@ class PersonalCodeManager {
   }
 }
 
-// Инициализация менеджера Personal Code
-const personalCodeManager = new PersonalCodeManager();
+// Инициализация менеджера Personal Code будет происходить после загрузки DOM
+let personalCodeManager;
