@@ -188,6 +188,27 @@
         </button>
       </div>
 
+      <!-- DATA MANAGEMENT WIDGET -->
+      <div class="bento-item" data-module="[DATA_CTRL_01]">
+        <h3>УПРАВЛЕНИЕ ДАННЫМИ</h3>
+        <div style="padding: 16px 0;">
+          <p style="font-size: 12px; color: var(--nexus-text-dim); margin-bottom: 16px; line-height: 1.6;">
+            Экспорт и импорт всех данных системы в формате JSON
+          </p>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <button onclick="exportData()" style="width: 100%; background: var(--nexus-green); color: var(--nexus-black);">
+              📤 ЭКСПОРТ ДАННЫХ
+            </button>
+            <button onclick="importData()" style="width: 100%; background: var(--nexus-amber); color: var(--nexus-black);">
+              📥 ИМПОРТ ДАННЫХ
+            </button>
+          </div>
+          <div style="margin-top: 16px; padding: 12px; background: var(--nexus-black); border-left: 3px solid var(--nexus-green); font-size: 11px; line-height: 1.6; color: var(--nexus-text-dim);">
+            <strong>Внимание:</strong> Импорт перезапишет все текущие данные. Сначала создайте резервную копию через экспорт.
+          </div>
+        </div>
+      </div>
+
     </div>
   </section>
 
