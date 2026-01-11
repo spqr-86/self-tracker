@@ -1119,9 +1119,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderAll();
 
   // Инициализация Personal Code системы
-  if (typeof personalCodeManager !== 'undefined') {
-    personalCodeManager.updateUI();
-  }
+  personalCodeManager.updateUI();
 
   // Обновлять цитату при каждом открытии раздела мотивации
   const motivationNav = document.querySelector('[data-section="motivation"]');

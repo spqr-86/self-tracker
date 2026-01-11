@@ -79,19 +79,17 @@ class StatsManager {
     // Применить бонусы от перков
     let xpAmount = reward.amount;
 
-    if (typeof personalCodeManager !== 'undefined') {
-      // Специфичные бонусы для типов активности
-      if (activityType === 'workout') {
-        xpAmount *= personalCodeManager.getBonus('workoutXP');
-      } else if (activityType === 'code') {
-        xpAmount *= personalCodeManager.getBonus('codeXP');
-      } else if (activityType === 'meditation') {
-        xpAmount *= personalCodeManager.getBonus('meditationXP');
-      }
-
-      // Общий бонус ко всем XP
-      xpAmount *= personalCodeManager.getBonus('allXP');
+    // Специфичные бонусы для типов активности
+    if (activityType === 'workout') {
+      xpAmount *= personalCodeManager.getBonus('workoutXP');
+    } else if (activityType === 'code') {
+      xpAmount *= personalCodeManager.getBonus('codeXP');
+    } else if (activityType === 'meditation') {
+      xpAmount *= personalCodeManager.getBonus('meditationXP');
     }
+
+    // Общий бонус ко всем XP
+    xpAmount *= personalCodeManager.getBonus('allXP');
 
     // Округлить до целого
     xpAmount = Math.floor(xpAmount);
@@ -158,9 +156,7 @@ class StatsManager {
     }, 3000);
 
     // Обновить Personal Code - могли разблокироваться новые перки
-    if (typeof personalCodeManager !== 'undefined') {
-      personalCodeManager.updateUI();
-    }
+    personalCodeManager.updateUI();
   }
 
   /**
