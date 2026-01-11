@@ -2083,3 +2083,130 @@ canvas {
     gap: 12px;
   }
 }
+
+/* ============================================
+   PIP-BOY / FALLOUT CODEX STYLES
+   ============================================ */
+
+.pipboy-screen {
+  background: linear-gradient(135deg, #000000 0%, #0a0a0a 100%);
+  border: 3px solid #00ff00;
+  border-radius: 12px;
+  padding: 0;
+  box-shadow:
+    0 0 30px rgba(0, 255, 0, 0.3),
+    inset 0 0 60px rgba(0, 255, 0, 0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+.pipboy-screen::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      rgba(0, 255, 0, 0.03) 0px,
+      rgba(0, 255, 0, 0.03) 1px,
+      transparent 1px,
+      transparent 2px
+    );
+  pointer-events: none;
+  z-index: 1;
+}
+
+.pipboy-header {
+  background: linear-gradient(180deg, #001a00 0%, #000000 100%);
+  border-bottom: 2px solid #00ff00;
+  padding: 24px 32px;
+  position: relative;
+  z-index: 2;
+}
+
+.pipboy-scanlines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.15) 0px,
+    rgba(0, 0, 0, 0.15) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  pointer-events: none;
+  animation: scanlines 8s linear infinite;
+}
+
+@keyframes scanlines {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(4px); }
+}
+
+.pipboy-content {
+  padding: 32px;
+  position: relative;
+  z-index: 2;
+}
+
+.vault-boy-container {
+  position: sticky;
+  top: 20px;
+  background: rgba(0, 26, 0, 0.5);
+  border: 2px solid rgba(0, 255, 0, 0.3);
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: inset 0 0 20px rgba(0, 255, 0, 0.1);
+}
+
+/* Pip-Boy textarea customization */
+#codex textarea:focus {
+  outline: none;
+  box-shadow:
+    inset 0 0 30px rgba(0, 255, 0, 0.15),
+    0 0 20px rgba(0, 255, 0, 0.4);
+  border-color: #00ff00;
+}
+
+/* Scanline effect for authenticity */
+@keyframes flicker {
+  0%, 100% { opacity: 0.98; }
+  50% { opacity: 1; }
+}
+
+.pipboy-screen {
+  animation: flicker 0.15s infinite;
+}
+
+/* Mobile Responsive for Pip-Boy */
+@media (max-width: 900px) {
+  .pipboy-content > div:first-child {
+    grid-template-columns: 1fr !important;
+    gap: 24px;
+  }
+
+  .vault-boy-container {
+    position: relative;
+    max-width: 200px;
+    margin: 0 auto;
+  }
+
+  .pipboy-header {
+    padding: 16px 20px;
+  }
+
+  .pipboy-content {
+    padding: 20px;
+  }
+
+  #codex textarea {
+    font-size: 13px;
+    min-height: 300px;
+  }
+}
