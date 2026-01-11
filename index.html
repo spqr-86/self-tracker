@@ -7,6 +7,7 @@
   <title>NEXUS OS - Life Operating System</title>
   <link rel="stylesheet" href="css/nexus-theme.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
 
@@ -853,14 +854,54 @@
 
           <!-- Code Editor Area -->
           <div style="position: relative;">
-            <!-- Terminal-style header -->
-            <div style="background: #001a00; border: 2px solid #00ff00; border-bottom: none; padding: 8px 16px; display: flex; justify-content: space-between; align-items: center;">
+            <!-- Terminal-style header with controls -->
+            <div style="background: #001a00; border: 2px solid #00ff00; border-bottom: none; padding: 8px 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
               <span style="color: #00ff00; font-size: 11px; font-family: var(--font-mono);">
                 &gt; PERSONAL_CODE.TXT
               </span>
-              <span style="color: #00ff0060; font-size: 10px; font-family: var(--font-mono);">
-                READ/WRITE
-              </span>
+              <div style="display: flex; gap: 8px; align-items: center;">
+                <!-- Reading Mode Toggle -->
+                <button
+                  id="reading-mode-btn"
+                  onclick="toggleReadingMode()"
+                  style="
+                    background: #003300;
+                    border: 1px solid #00ff00;
+                    color: #00ff00;
+                    padding: 4px 12px;
+                    font-family: var(--font-mono);
+                    font-size: 10px;
+                    cursor: pointer;
+                    border-radius: 3px;
+                    transition: all 0.2s;
+                  "
+                  title="Улучшить читаемость"
+                >
+                  👁️ ЧТЕНИЕ
+                </button>
+                <!-- Preview Toggle -->
+                <button
+                  id="preview-mode-btn"
+                  onclick="togglePreviewMode()"
+                  style="
+                    background: #003300;
+                    border: 1px solid #00ff00;
+                    color: #00ff00;
+                    padding: 4px 12px;
+                    font-family: var(--font-mono);
+                    font-size: 10px;
+                    cursor: pointer;
+                    border-radius: 3px;
+                    transition: all 0.2s;
+                  "
+                  title="Просмотр Markdown"
+                >
+                  📖 PREVIEW
+                </button>
+                <span style="color: #00ff0060; font-size: 10px; font-family: var(--font-mono);" id="codex-mode-indicator">
+                  EDIT
+                </span>
+              </div>
             </div>
 
             <!-- Text Editor -->
@@ -868,15 +909,25 @@
               id="personal-code-text"
               placeholder="> ВВЕДИТЕ ВАШ ПЕРСОНАЛЬНЫЙ КОДЕКС...
 
-ПРИМЕР:
+ПРИМЕР С MARKDOWN:
 ----------------------------------------
-1. ЧЕСТНОСТЬ ПРЕВЫШЕ ВСЕГО
-2. ДЕРЖУ ДАННОЕ СЛОВО
-3. РАЗВИВАЮСЬ КАЖДЫЙ ДЕНЬ
-4. ПОМОГАЮ ТЕМ, КТО НУЖДАЕТСЯ
-5. НЕ СДАЮСЬ ПЕРЕД ТРУДНОСТЯМИ
-6. УВАЖАЮ СЕБЯ И ДРУГИХ
-7. ПРИНИМАЮ ОТВЕТСТВЕННОСТЬ ЗА СВОИ ДЕЙСТВИЯ
+# МОЙ КОДЕКС
+
+## Основные принципы
+
+1. **ЧЕСТНОСТЬ** - Быть честным перед собой и другими
+2. **СЛОВО** - Держу данное слово
+3. **РОСТ** - Развиваюсь каждый день
+4. **ПОМОЩЬ** - Помогаю тем, кто нуждается
+
+> &quot;Не сдаюсь перед трудностями&quot;
+
+## Обязательства
+
+- Уважаю себя и других
+- Принимаю ответственность за свои действия
+- *Постоянно учусь новому*
+
 ----------------------------------------"
               style="
                 width: 100%;
@@ -895,6 +946,26 @@
               "
               onchange="savePersonalCodeText()"
             ></textarea>
+
+            <!-- Markdown Preview -->
+            <div
+              id="personal-code-preview"
+              style="
+                display: none;
+                width: 100%;
+                min-height: 400px;
+                background: #001a00;
+                color: #00ff00;
+                border: 2px solid #00ff00;
+                border-top: none;
+                padding: 20px;
+                font-family: 'Courier New', monospace;
+                font-size: 14px;
+                line-height: 1.8;
+                box-shadow: inset 0 0 30px rgba(0, 255, 0, 0.1);
+                overflow-y: auto;
+              "
+            ></div>
 
             <!-- Terminal-style footer with buttons -->
             <div style="background: #001a00; border: 2px solid #00ff00; border-top: none; padding: 12px 16px; display: flex; gap: 12px;">
@@ -968,10 +1039,31 @@
               <br><br>
               Запиши здесь правила, по которым ты живешь или хочешь жить.
               Это твой личный моральный кодекс, который поможет принимать верные решения.
-              <br><br>
-              <span style="color: #00ff00;">
-                💡 СОВЕТ: Перечитывай свой кодекс регулярно. Обновляй его по мере роста и развития.
-              </span>
+            </div>
+
+            <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid #00ff0040;">
+              <div style="color: #00ff00cc; margin-bottom: 12px; font-size: 11px; letter-spacing: 1px;">
+                [FEATURES] ВОЗМОЖНОСТИ
+              </div>
+              <div style="color: #00ff0099; font-size: 12px;">
+                <div style="margin-bottom: 8px;">
+                  <span style="color: #00ff00;">👁️ РЕЖИМ ЧТЕНИЯ</span> - Улучшенная читаемость: больше шрифт, выше контраст, без эффектов
+                </div>
+                <div style="margin-bottom: 8px;">
+                  <span style="color: #00ff00;">📖 PREVIEW</span> - Просмотр отформатированного текста с поддержкой Markdown
+                </div>
+                <div style="margin-top: 16px; padding: 12px; background: rgba(0, 255, 0, 0.05); border-left: 3px solid #00ff00;">
+                  <strong style="color: #00ff00;">ПОДДЕРЖКА MARKDOWN:</strong><br>
+                  <code style="color: #00ff00aa; font-size: 11px;">
+                    # Заголовок<br>
+                    ## Подзаголовок<br>
+                    **жирный** *курсив*<br>
+                    - Список<br>
+                    &gt; Цитата<br>
+                    [ссылка](url)
+                  </code>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -1117,6 +1209,7 @@
   <script src="js/personal-code.js"></script>
   <script src="js/phq15.js"></script>
   <script src="js/weight.js"></script>
+  <script src="js/codex.js"></script>
   <script src="js/app.js"></script>
 
 </body>
