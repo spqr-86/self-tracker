@@ -377,21 +377,28 @@ function renderCode() {
    GOALS
 ========================= */
 function addGoal() {
-  const data = {
-    goal: document.getElementById('gGoal').value.trim(),
-    deadline: document.getElementById('gDeadline').value,
-    completed: false
-  };
+  const goalText = document.getElementById('gGoal').value.trim();
+  const deadline = document.getElementById('gDeadline').value;
 
-  if (!data.goal || !data.deadline) {
+  if (!goalText || !deadline) {
     ui.showError('Заполните все обязательные поля');
     return;
   }
+
+  const data = {
+    name: goalText,
+    goal: goalText, // для обратной совместимости
+    deadline: deadline,
+    type: 'Краткосрочная', // по умолчанию
+    completed: false,
+    progress: 0
+  };
 
   if (storage.add('goals', data)) {
     ui.clearForm('goalForm');
     renderGoals();
     updateDashboard();
+    alert('✓ Цель добавлена');
   }
 }
 
@@ -1196,7 +1203,8 @@ function updateDashboardGoals() {
     li.style.padding = '8px';
 
     const text = document.createElement('div');
-    text.innerHTML = `<strong>${g.goal}</strong><br><span style="color: var(--nexus-green-dim);">ЦЕЛЬ: ${ui.formatDate(g.deadline)}</span>`;
+    const goalText = g.name || g.goal || 'Без названия';
+    text.innerHTML = `<strong>${goalText}</strong><br><span style="color: var(--nexus-green-dim);">ЦЕЛЬ: ${ui.formatDate(g.deadline)}</span>`;
 
     li.appendChild(text);
     list.appendChild(li);

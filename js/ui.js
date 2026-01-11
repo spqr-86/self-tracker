@@ -152,6 +152,17 @@ class UIManager {
     if (event && event.target) {
       event.target.classList.add('active');
     }
+
+    // Автоматически свернуть меню на мобильных
+    const nav = document.getElementById('main-nav');
+    const hamburger = document.getElementById('menu-toggle');
+    if (nav && nav.classList.contains('nav-closed') === false) {
+      // Меню открыто, закрываем его
+      nav.classList.add('nav-closed');
+      if (hamburger) {
+        hamburger.classList.remove('active');
+      }
+    }
   }
 
   /**
