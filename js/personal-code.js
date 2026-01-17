@@ -237,6 +237,12 @@ class PersonalCodeManager {
     // Уже разблокирован?
     if (this.unlockedPerks.includes(perkId)) return false;
 
+    // Проверяем, что statsManager существует
+    if (typeof statsManager === 'undefined' || !statsManager) {
+      console.warn('[PersonalCode] statsManager не определен');
+      return false;
+    }
+
     // Проверка требований статов
     const stats = statsManager.stats;
     for (const [statName, requiredLevel] of Object.entries(perk.requirements)) {
@@ -327,6 +333,9 @@ class PersonalCodeManager {
    * Обновление UI дерева перков
    */
   updateUI() {
+    console.log('[PersonalCode] updateUI вызван');
+    console.log('[PersonalCode] stats:', typeof statsManager !== 'undefined' ? statsManager.stats : 'statsManager не определен');
+
     const categories = {
       PHYSICAL: [],
       MENTAL: [],
@@ -345,10 +354,14 @@ class PersonalCodeManager {
     for (const [category, perks] of Object.entries(categories)) {
       const container = document.getElementById(`perks-${category.toLowerCase()}`);
 
+      console.log(`[PersonalCode] Ищем контейнер: perks-${category.toLowerCase()}`);
       console.log(`[PersonalCode] Контейнер для ${category}:`, container);
       console.log(`[PersonalCode] Перков в категории ${category}:`, perks.length);
 
-      if (!container) continue;
+      if (!container) {
+        console.warn(`[PersonalCode] Контейнер не найден для категории ${category}`);
+        continue;
+      }
 
       container.innerHTML = perks.map(perk => {
         const isUnlocked = this.unlockedPerks.includes(perk.id);

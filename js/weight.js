@@ -156,6 +156,11 @@ function updateWeightDisplay() {
 
   // Update chart
   renderWeightChart();
+
+  // Update dashboard weight widget
+  if (typeof updateDashboard === 'function') {
+    updateDashboard();
+  }
 }
 
 /**
