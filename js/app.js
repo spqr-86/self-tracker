@@ -160,7 +160,7 @@ function drawWorkoutChart() {
           time: {
             unit: 'day',
             displayFormats: {
-              day: 'DD.MM'
+              day: 'dd.MM'
             }
           },
           title: {
