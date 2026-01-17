@@ -138,6 +138,8 @@ class UIManager {
    * Переключение секций с обновлением навигации
    */
   showSection(sectionId, event) {
+    console.log('[UI] Переключение на секцию:', sectionId);
+
     // Скрыть все секции
     document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
 
