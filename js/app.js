@@ -691,18 +691,24 @@ function completeExercise(id) {
 }
 
 function renderProgram() {
+  console.log('[App] renderProgram вызван');
+  console.log('[App] Данные программы:', storage.data.program);
+
   const days = {
     'Вторник': document.getElementById('programTuesday'),
     'Четверг': document.getElementById('programThursday'),
     'Суббота': document.getElementById('programSaturday')
   };
 
+  console.log('[App] Контейнеры дней:', days);
+
   // Очистить все списки
   Object.values(days).forEach(list => {
     if (list) list.innerHTML = '';
   });
 
-  if (storage.data.program.length === 0) {
+  if (!storage.data.program || storage.data.program.length === 0) {
+    console.log('[App] Нет данных программы');
     Object.values(days).forEach(list => {
       if (list) list.innerHTML = '<li class="list-item">Нет упражнений</li>';
     });
@@ -930,6 +936,7 @@ function importData() {
    INITIALIZATION
 ========================= */
 function renderAll() {
+  console.log('[App] renderAll вызван');
   renderWorkouts();
   renderMeditation();
   renderCoding();
@@ -939,6 +946,13 @@ function renderAll() {
   renderTestHistory();
   showRandomQuote();
   updateDashboard();
+
+  // Update weight display if function exists
+  if (typeof updateWeightDisplay === 'function') {
+    updateWeightDisplay();
+  }
+
+  console.log('[App] renderAll завершен');
 }
 
 /* =========================
@@ -1064,6 +1078,42 @@ function updateDashboard() {
 
   // Update today's program
   updateTodaysProgram();
+
+  // Update weight widget on dashboard
+  updateDashboardWeight();
+}
+
+/**
+ * Обновление виджета веса на дашборде
+ */
+function updateDashboardWeight() {
+  const currentWeightEl = document.getElementById('current-weight');
+  const weightChangeEl = document.getElementById('weight-change');
+
+  if (!currentWeightEl || !weightChangeEl) return;
+
+  // Get weight history from localStorage
+  const data = localStorage.getItem('nexusWeightHistory');
+  if (!data) {
+    currentWeightEl.textContent = '--';
+    weightChangeEl.textContent = 'ИЗМЕНЕНИЕ: --';
+    return;
+  }
+
+  const history = JSON.parse(data);
+  if (history.length === 0) {
+    currentWeightEl.textContent = '--';
+    weightChangeEl.textContent = 'ИЗМЕНЕНИЕ: --';
+    return;
+  }
+
+  // Get current and starting weight
+  const current = history[history.length - 1].weight;
+  const starting = history[0].weight;
+  const change = current - starting;
+
+  currentWeightEl.textContent = current.toFixed(1);
+  weightChangeEl.innerHTML = `ИЗМЕНЕНИЕ: <span style="color: ${change > 0 ? '#ff4444' : 'var(--nexus-green)'};">${change >= 0 ? '+' : ''}${change.toFixed(1)} кг</span>`;
 }
 
 function updateDashboardGoals() {
@@ -1100,19 +1150,26 @@ function updateDashboardGoals() {
 }
 
 function updateTodaysProgram() {
+  console.log('[App] updateTodaysProgram вызван');
   const container = document.getElementById('dashboard-program');
-  if (!container) return;
+  if (!container) {
+    console.warn('[App] Контейнер dashboard-program не найден');
+    return;
+  }
 
   // Get today's day of week in Russian
   const days = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
   const today = days[new Date().getDay()];
+  console.log('[App] Сегодня:', today);
 
   if (!storage.data.program) {
+    console.log('[App] Нет данных программы');
     container.innerHTML = '<p style="font-size: 12px; color: var(--nexus-green-dim); text-align: center; padding: 20px;">НА СЕГОДНЯ НЕТ УПРАЖНЕНИЙ</p>';
     return;
   }
 
   const todaysExercises = storage.data.program.filter(p => p.day === today);
+  console.log('[App] Упражнений на сегодня:', todaysExercises.length, todaysExercises);
 
   if (todaysExercises.length === 0) {
     container.innerHTML = '<p style="font-size: 12px; color: var(--nexus-green-dim); text-align: center; padding: 20px;">НА СЕГОДНЯ НЕТ УПРАЖНЕНИЙ</p>';
@@ -1143,13 +1200,18 @@ function initializeDates() {
 
 // Инициализация при загрузке страницы
 document.addEventListener('DOMContentLoaded', () => {
+  console.log('[App] DOMContentLoaded - начало инициализации');
+
+  // Инициализация Personal Code системы ПЕРЕД renderAll
+  console.log('[App] Создание PersonalCodeManager...');
+  personalCodeManager = new PersonalCodeManager();
+  console.log('[App] PersonalCodeManager создан');
+
   initializeDates();
   renderAll();
 
-  // Инициализация Personal Code системы
-  console.log('[App] Создание PersonalCodeManager...');
-  personalCodeManager = new PersonalCodeManager();
-  console.log('[App] PersonalCodeManager создан, вызов updateUI...');
+  // Обновить UI перков после загрузки всех данных
+  console.log('[App] Вызов personalCodeManager.updateUI...');
   personalCodeManager.updateUI();
   console.log('[App] updateUI завершен');
 
@@ -1158,6 +1220,8 @@ document.addEventListener('DOMContentLoaded', () => {
   if (motivationNav) {
     motivationNav.addEventListener('click', showRandomQuote);
   }
+
+  console.log('[App] Инициализация завершена');
 });
 
 // Автосохранение при закрытии страницы
