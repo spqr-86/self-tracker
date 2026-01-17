@@ -729,6 +729,8 @@ function renderProgram() {
     }
   });
 
+  console.log('[App] Упражнения по дням:', programByDay);
+
   // Отрисовка каждого дня
   Object.entries(programByDay).forEach(([day, exercises]) => {
     const list = days[day];
@@ -789,6 +791,8 @@ function renderProgram() {
       list.appendChild(li);
     });
   });
+
+  console.log('[App] Рендеринг программы завершен');
 }
 
 /* =========================
@@ -992,15 +996,24 @@ function deleteCoding(id) {
 }
 
 function renderCoding() {
+  console.log('[App] renderCoding вызван');
+  console.log('[App] storage.data.code:', storage.data.code);
+
   const list = document.getElementById('codeList');
-  if (!list) return;
+  if (!list) {
+    console.warn('[App] Контейнер codeList не найден');
+    return;
+  }
 
   list.innerHTML = '';
 
   if (!storage.data.code || storage.data.code.length === 0) {
+    console.log('[App] Нет данных кодинга');
     list.innerHTML = '<li class="list-item">НЕТ СЕССИЙ КОДА</li>';
     return;
   }
+
+  console.log(`[App] Рендеринг ${storage.data.code.length} сессий кодинга`);
 
   // Sort by date (newest first)
   const sorted = [...storage.data.code].sort((a, b) =>
@@ -1032,6 +1045,8 @@ function renderCoding() {
     li.appendChild(actions);
     list.appendChild(li);
   });
+
+  console.log('[App] Рендеринг кодинга завершен');
 
   // Render chart if canvas exists
   renderCodingChart();

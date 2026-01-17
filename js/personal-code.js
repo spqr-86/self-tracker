@@ -392,6 +392,8 @@ class PersonalCodeManager {
 
     // Обновление счетчика перков
     this.updatePerkCounter();
+
+    console.log('[PersonalCode] updateUI завершен');
   }
 
   /**

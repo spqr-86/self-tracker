@@ -34,8 +34,10 @@ class StorageManager {
    * Загрузка данных из localStorage с обработкой ошибок
    */
   load() {
+    console.log('[Storage] Начало загрузки данных из localStorage');
+
     if (!this.isStorageAvailable()) {
-      console.warn('localStorage недоступен. Данные не будут сохранены.');
+      console.warn('[Storage] localStorage недоступен. Данные не будут сохранены.');
       return;
     }
 
@@ -44,10 +46,14 @@ class StorageManager {
         const stored = localStorage.getItem(key);
         if (stored) {
           this.data[key] = JSON.parse(stored);
+          console.log(`[Storage] Загружено ${this.data[key].length} записей для ключа "${key}"`);
+        } else {
+          console.log(`[Storage] Нет данных для ключа "${key}"`);
         }
       }
+      console.log('[Storage] Загрузка данных завершена:', this.data);
     } catch (e) {
-      console.error('Ошибка загрузки данных:', e);
+      console.error('[Storage] Ошибка загрузки данных:', e);
       this.showError('Не удалось загрузить данные из хранилища');
     }
   }
