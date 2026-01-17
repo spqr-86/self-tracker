@@ -611,9 +611,17 @@ function renderAchievements() {
 /* =========================
    WORKOUT PROGRAM
 ========================= */
+// Нормализация названия дня недели
+function normalizeDayOfWeek(day) {
+  if (!day) return '';
+  const normalized = day.trim();
+  // Привести первую букву к верхнему регистру, остальные к нижнему
+  return normalized.charAt(0).toUpperCase() + normalized.slice(1).toLowerCase();
+}
+
 function addProgramExercise() {
   const data = {
-    day: document.getElementById('pDay').value,
+    day: normalizeDayOfWeek(document.getElementById('pDay').value),
     exercise: document.getElementById('pExercise').value.trim(),
     sets: parseInt(document.getElementById('pSets').value),
     reps: parseInt(document.getElementById('pReps').value),
@@ -709,8 +717,9 @@ function renderProgram() {
   };
 
   storage.data.program.forEach(p => {
-    if (programByDay[p.day]) {
-      programByDay[p.day].push(p);
+    const normalizedDay = normalizeDayOfWeek(p.day);
+    if (programByDay[normalizedDay]) {
+      programByDay[normalizedDay].push(p);
     }
   });
 
