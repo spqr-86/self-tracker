@@ -59,49 +59,12 @@
     <!-- BENTO GRID -->
     <div class="bento-grid">
 
-      <!-- RPG STATS WIDGET (Wide) -->
-      <div class="bento-item bento-wide" data-module="[STAT_SYS_01]">
-        <h3>СТАТЫ ПЕРСОНАЖА</h3>
-        <div class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-name">STR</div>
-            <div class="stat-value" id="stat-str-value">1</div>
-            <div class="stat-xp" id="stat-str-xp">0 / 100 XP</div>
-            <div class="xp-bar">
-              <div class="xp-bar-fill" id="stat-str-bar" style="width: 0%"></div>
-            </div>
-          </div>
-
-          <div class="stat-card">
-            <div class="stat-name">PER</div>
-            <div class="stat-value" id="stat-per-value">1</div>
-            <div class="stat-xp" id="stat-per-xp">0 / 100 XP</div>
-            <div class="xp-bar">
-              <div class="xp-bar-fill" id="stat-per-bar" style="width: 0%"></div>
-            </div>
-          </div>
-
-          <div class="stat-card">
-            <div class="stat-name">INT</div>
-            <div class="stat-value" id="stat-int-value">1</div>
-            <div class="stat-xp" id="stat-int-xp">0 / 100 XP</div>
-            <div class="xp-bar">
-              <div class="xp-bar-fill" id="stat-int-bar" style="width: 0%"></div>
-            </div>
-          </div>
-
-          <div class="stat-card">
-            <div class="stat-name">WIL</div>
-            <div class="stat-value" id="stat-wil-value">1</div>
-            <div class="stat-xp" id="stat-wil-xp">0 / 100 XP</div>
-            <div class="xp-bar">
-              <div class="xp-bar-fill" id="stat-wil-bar" style="width: 0%"></div>
-            </div>
-          </div>
+      <!-- MODE WIDGET (Wide) - Replaces old stats -->
+      <div class="bento-item bento-wide" data-module="[MODE_SYS_01]" id="mode-widget">
+        <!-- Content rendered by JS based on current mode -->
+        <div id="mode-widget-content">
+          <!-- Placeholder - will be filled by renderModeWidget() -->
         </div>
-        <p style="font-size: 11px; color: var(--nexus-green-dark); margin-top: 12px; text-align: center;">
-          ПОЛУЧЕНИЕ XP: ТРЕНИРОВКА +10 СИЛ | МЕДИТАЦИЯ +15 ВОС | КОД +20 ИНТ | ТЕСТ +10 ВОЛ
-        </p>
       </div>
 
       <!-- WEIGHT TRACKER WIDGET -->
