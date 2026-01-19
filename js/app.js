@@ -1474,6 +1474,162 @@ function checkModeSignals() {
 }
 
 /**
+ * Рендеринг режимного виджета на дашборде
+ */
+function renderModeWidget() {
+  const container = document.getElementById('mode-widget-content');
+  if (!container) {
+    console.warn('[App] mode-widget-content не найден');
+    return;
+  }
+
+  if (typeof gameState === 'undefined') {
+    container.innerHTML = '<p style="color: var(--nexus-amber);">Система режимов не загружена</p>';
+    return;
+  }
+
+  const mode = gameState.getMode();
+  const config = gameState.getModeConfig(mode);
+
+  console.log('[App] renderModeWidget - режим:', mode);
+
+  if (mode === 'norm') {
+    renderNormModeWidget(container, config);
+  } else {
+    renderMinimalModeWidget(container, mode, config);
+  }
+}
+
+/**
+ * Рендеринг полного виджета для режима NORM
+ */
+function renderNormModeWidget(container, config) {
+  const recentModes = gameState.getRecentModes(7);
+  const stats = gameState.getModeStats(30);
+  const todayStr = new Date().toISOString().split('T')[0];
+
+  // Задачи для режима Норма
+  const normTasks = [
+    { icon: '◉', text: 'Сон ~7+ часов', done: false },
+    { icon: '◉', text: 'Шаг к делу (работа/учеба/проект)', done: false },
+    { icon: '◉', text: 'Движение (тренировка/прогулка)', done: false }
+  ];
+
+  // Генерируем HTML для недельной истории
+  const weekHtml = recentModes.map(day => {
+    const dayConfig = gameState.getModeConfig(day.mode);
+    const isToday = day.date === todayStr;
+    return `
+      <div class="mode-week-day ${isToday ? 'today' : ''}" data-mode="${day.mode}" title="${day.date}">
+        <span class="day-label">${day.dayName}</span>
+        <span class="day-icon" style="color: ${dayConfig.color}">${dayConfig.icon}</span>
+      </div>
+    `;
+  }).join('');
+
+  container.innerHTML = `
+    <div class="mode-widget-full">
+      <!-- Заголовок -->
+      <div class="mode-widget-header">
+        <div class="mode-widget-title">
+          <span class="mode-widget-icon" style="color: ${config.color}">${config.icon}</span>
+          <span class="mode-widget-name norm">${config.name.toUpperCase()}</span>
+        </div>
+        <button class="mode-widget-change" onclick="showModeModal()" title="Сменить режим">⚙</button>
+      </div>
+
+      <!-- Задачи дня -->
+      <div class="mode-widget-tasks">
+        <div class="tasks-label">ЗАДАЧИ ДНЯ:</div>
+        ${normTasks.map(task => `
+          <div class="mode-task">
+            <span class="task-icon">${task.icon}</span>
+            <span class="task-text">${task.text}</span>
+          </div>
+        `).join('')}
+      </div>
+
+      <!-- История недели -->
+      <div class="mode-widget-week">
+        <div class="week-label">НЕДЕЛЯ:</div>
+        <div class="week-days">
+          ${weekHtml}
+        </div>
+      </div>
+
+      <!-- Статистика за 30 дней -->
+      <div class="mode-widget-stats">
+        <div class="stats-item norm">
+          <span class="stats-value">${stats.norm}</span>
+          <span class="stats-label">НОРМА</span>
+        </div>
+        <div class="stats-item minimum">
+          <span class="stats-value">${stats.minimum}</span>
+          <span class="stats-label">МИНИМУМ</span>
+        </div>
+        <div class="stats-item crisis">
+          <span class="stats-value">${stats.crisis}</span>
+          <span class="stats-label">КРИЗИС</span>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/**
+ * Рендеринг минимального виджета для режимов MINIMUM и CRISIS
+ */
+function renderMinimalModeWidget(container, mode, config) {
+  let tasks = [];
+  let supportMessage = '';
+
+  if (mode === 'minimum') {
+    tasks = [
+      { icon: '░', text: 'Сон, еда, гигиена' },
+      { icon: '░', text: '10-20 мин прогулки' },
+      { icon: '░', text: 'Один маленький шаг' }
+    ];
+  } else if (mode === 'crisis') {
+    tasks = [
+      { icon: '▒', text: 'Поесть что-то' },
+      { icon: '▒', text: 'Попить воды' },
+      { icon: '▒', text: 'Связаться с кем-то' }
+    ];
+    supportMessage = 'Ты не один. Это пройдёт.';
+  }
+
+  container.innerHTML = `
+    <div class="mode-widget-minimal" data-mode="${mode}">
+      <!-- Заголовок -->
+      <div class="mode-minimal-header">
+        <span class="mode-minimal-icon" style="color: ${config.color}">${config.icon}</span>
+        <span class="mode-minimal-name" style="color: ${config.color}">${config.name.toUpperCase()}</span>
+        <button class="mode-widget-change" onclick="showModeModal()" title="Сменить режим">⚙</button>
+      </div>
+
+      <!-- Описание режима -->
+      <div class="mode-minimal-desc">${config.description}</div>
+
+      <!-- Задачи -->
+      <div class="mode-minimal-tasks">
+        ${tasks.map(task => `
+          <div class="mode-minimal-task">
+            <span class="task-icon" style="color: ${config.color}">${task.icon}</span>
+            <span class="task-text">${task.text}</span>
+          </div>
+        `).join('')}
+      </div>
+
+      ${supportMessage ? `
+        <div class="mode-support-message">
+          ${supportMessage}
+        </div>
+      ` : ''}
+    </div>
+  `;
+}
+
+/**
  * Инициализация системы режимов
  */
 function initModeSystem() {
@@ -1487,10 +1643,14 @@ function initModeSystem() {
   // Обновить индикатор
   updateModeIndicator();
 
+  // Рендерить виджет режима на дашборде
+  renderModeWidget();
+
   // Привязать callback на изменение режима
   gameState.onModeChange = (newMode, oldMode) => {
     console.log(`[App] Режим изменён: ${oldMode} → ${newMode}`);
     updateModeIndicator();
+    renderModeWidget(); // Перерендерить виджет при смене режима
   };
 
   // Показать приветственную модалку если нужно
