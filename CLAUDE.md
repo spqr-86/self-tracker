@@ -1,0 +1,335 @@
+# CLAUDE.md - Self-Tracker (NEXUS OS) Codebase Guide
+
+## Project Overview
+
+**NEXUS OS** is a personal life operating system / self-tracker web application with RPG gamification elements. It's designed as a single-page application (SPA) that helps users track various aspects of their life including workouts, meditation, coding sessions, goals, weight, and psychological assessments.
+
+**Version:** 2.2.0
+**Language:** Russian (primary UI language)
+**Design Theme:** Pip-Boy / Fallout-inspired terminal aesthetic
+
+## Architecture
+
+### File Structure
+
+```
+self-tracker/
+├── index.html          # Main SPA entry point with all sections
+├── index-old.html      # Legacy version backup
+├── version.txt         # Version history and feature changelog
+├── css/
+│   ├── nexus-theme.css # Main NEXUS/Pip-Boy theme styles (~45KB)
+│   └── styles.css      # Additional/legacy styles
+├── js/
+│   ├── app.js          # Main application logic, section rendering
+│   ├── storage.js      # StorageManager - localStorage abstraction
+│   ├── ui.js           # UIManager - notifications, UI helpers
+│   ├── stats.js        # StatsManager - RPG stats system (STR/PER/INT/WIL)
+│   ├── personal-code.js # PersonalCodeManager - perks system
+│   ├── weight.js       # Weight tracking with charts
+│   ├── phq15.js        # Depression screening test (PHQ-15 based)
+│   └── codex.js        # Personal codex with Markdown support
+└── README.md
+```
+
+### Core Modules
+
+| Module | Class/Global | Purpose |
+|--------|-------------|---------|
+| `storage.js` | `StorageManager` → `storage` | Data persistence via localStorage |
+| `ui.js` | `UIManager` → `ui` | Notifications, form helpers, date formatting |
+| `stats.js` | `StatsManager` → `statsManager` | RPG character stats and XP progression |
+| `personal-code.js` | `PersonalCodeManager` → `personalCodeManager` | Perk tree system |
+| `app.js` | Global functions | Main app logic, CRUD operations, rendering |
+| `weight.js` | Global functions | Weight tracking module |
+| `phq15.js` | Global functions | Psychological test module |
+| `codex.js` | Global functions | Personal codex with Markdown |
+
+### Module Initialization Order
+
+1. `storage.js` - Creates `storage` singleton (loads data immediately)
+2. `ui.js` - Creates `ui` singleton
+3. `stats.js` - Creates `statsManager` singleton
+4. `personal-code.js` - Defines `PersonalCodeManager` class
+5. `app.js` - On DOMContentLoaded:
+   - Creates `personalCodeManager` instance
+   - Calls `initializeDates()`
+   - Calls `renderAll()`
+   - Updates perk UI
+
+## Data Storage
+
+### localStorage Keys
+
+| Key | Type | Description |
+|-----|------|-------------|
+| `workouts` | Array | Workout journal entries |
+| `meditations` | Array | Meditation sessions |
+| `code` | Array | Coding sessions |
+| `goals` | Array | Goals with progress tracking |
+| `achievements` | Array | User achievements |
+| `program` | Array | Workout program by day |
+| `testResults` | Array | Depression test results |
+| `nexusStats` | Object | RPG stats (STR, PER, INT, WIL) |
+| `nexusUnlockedPerks` | Array | IDs of unlocked perks |
+| `nexusWeightHistory` | Array | Weight measurements |
+| `nexusWeightGoal` | Number | Target weight |
+| `nexusPHQ15History` | Array | PHQ-15 test history |
+| `nexusPersonalCodeText` | String | Personal codex markdown text |
+| `nexusTheme` | String | Theme preference ('dark'/'light') |
+| `codexReadingMode` | String | Reading mode state |
+
+### Data Object Schemas
+
+```javascript
+// Workout entry
+{
+  id: Number,           // Unique ID (Date.now() + Math.random())
+  date: "YYYY-MM-DD",
+  exercise: String,
+  sets: Number,
+  reps: Number,
+  weight: Number        // kg
+}
+
+// Meditation entry
+{
+  id: Number,
+  date: "YYYY-MM-DD",
+  minutes: Number,
+  type: String,
+  notes: String
+}
+
+// Goal entry
+{
+  id: Number,
+  name: String,
+  goal: String,         // Legacy field (same as name)
+  deadline: "YYYY-MM-DD",
+  type: "Краткосрочная" | "Долгосрочная",
+  completed: Boolean,
+  progress: Number      // 0-100
+}
+
+// Program exercise
+{
+  id: Number,
+  day: "Вторник" | "Четверг" | "Суббота",
+  exercise: String,
+  sets: Number,
+  reps: Number,
+  weight: Number,
+  video: String         // Optional YouTube URL
+}
+
+// Stats structure
+{
+  STR: { value: Number, xp: Number },
+  PER: { value: Number, xp: Number },
+  INT: { value: Number, xp: Number },
+  WIL: { value: Number, xp: Number }
+}
+```
+
+## RPG Stats System
+
+The app uses 4 primary stats (Fallout-inspired):
+
+| Stat | Full Name | Русский | Gains XP From |
+|------|-----------|---------|---------------|
+| STR | Strength | Сила | Workouts (+10 XP) |
+| PER | Perception | Восприятие | Meditation (+15 XP) |
+| INT | Intelligence | Интеллект | Coding (+20 XP per hour) |
+| WIL | Willpower | Воля | Psych tests (+10 XP) |
+
+- **XP per Level:** 100
+- **Level up:** Triggers overlay animation
+- **Perks:** Unlock when stat requirements are met
+
+## Perks System
+
+16 perks across 4 categories:
+
+| Category | Russian | Stats Required |
+|----------|---------|----------------|
+| PHYSICAL | Физические | STR, PER |
+| MENTAL | Ментальные | INT |
+| SPIRITUAL | Духовные | WIL |
+| HYBRID | Гибридные | Multiple stats |
+
+Perks provide bonuses like XP multipliers, unlock features, etc.
+
+## UI Sections
+
+The app has 10 main sections (single-page navigation):
+
+1. **dashboard** - Overview with bento grid widgets
+2. **workout-program** - Weekly workout schedule (Tue/Thu/Sat)
+3. **workouts** - Workout journal with Chart.js graphs
+4. **meditation** - Meditation sessions log
+5. **coding** - Coding sessions tracker
+6. **goals** - Goals with progress bars
+7. **weight** - Weight tracking with SVG chart
+8. **psych-test** - PHQ-15 depression screening
+9. **codex** - Personal principles (Markdown support)
+10. **perks** - Perk tree visualization
+
+## Development Conventions
+
+### Code Style
+
+- **Language:** JavaScript ES6+ (no TypeScript, no build step)
+- **Modules:** Class-based singletons for managers
+- **Comments:** Russian for user-facing, English for technical
+- **Functions:** Use `renderX()` pattern for updating UI sections
+- **Event Handlers:** Inline `onclick` in HTML for navigation
+
+### Naming Conventions
+
+```javascript
+// Functions
+addWorkout()        // CRUD operations
+deleteWorkout(id)
+editWorkout(id)
+renderWorkouts()    // UI rendering
+updateDashboard()   // Dashboard widget updates
+
+// DOM IDs
+'workoutList'       // Lists: entityList
+'wDate'             // Form inputs: prefix + fieldName
+'stat-str-value'    // Stats: stat-{name}-{property}
+```
+
+### Console Logging
+
+The app uses `console.log` with prefixes for debugging:
+```javascript
+console.log('[App] renderAll вызван');
+console.log('[Storage] Загружено X записей для ключа "Y"');
+console.log('[PersonalCode] updateUI вызван');
+console.log('[Weight] Форма - bodyFat значение:', value);
+```
+
+### Validation Pattern
+
+```javascript
+// In StorageManager
+validateWorkout(data) {
+  if (!data.date) return 'Укажите дату';
+  if (!data.exercise) return 'Укажите упражнение';
+  return null;  // null = valid
+}
+
+// Usage
+if (storage.add('workouts', data, storage.validateWorkout.bind(storage))) {
+  // Success
+}
+```
+
+### XSS Protection
+
+All user input is sanitized through `storage.sanitize()`:
+```javascript
+sanitize(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+```
+
+## External Dependencies
+
+Loaded via CDN in index.html:
+
+| Library | Purpose |
+|---------|---------|
+| Chart.js | Workout progress charts |
+| chartjs-adapter-date-fns | Date handling for Chart.js time scale |
+| marked.js | Markdown rendering for codex |
+
+## Common Development Tasks
+
+### Adding a New Section
+
+1. Add HTML section in `index.html` with `id` and `class="section"`
+2. Add navigation button in `<nav>` with `onclick="showSection('id', event)"`
+3. Add render function in `app.js`: `renderNewSection()`
+4. Call render function in `renderAll()`
+5. Add data key to `storage.js` if needed
+
+### Adding XP for New Activity
+
+1. Add reward in `stats.js`:
+```javascript
+this.XP_REWARDS = {
+  newActivity: { stat: 'STAT_NAME', amount: X }
+};
+```
+
+2. Call in activity handler:
+```javascript
+statsManager.addXPForActivity('newActivity');
+```
+
+### Adding a New Perk
+
+1. Add perk definition in `personal-code.js` `initPerks()`:
+```javascript
+newPerk: {
+  id: 'newPerk',
+  name: 'НАЗВАНИЕ',
+  category: 'PHYSICAL|MENTAL|SPIRITUAL|HYBRID',
+  icon: '🆕',
+  description: 'Описание перка',
+  requirements: { STR: 5, INT: 3 },
+  benefits: { bonusType: 1.5 },
+  unlocked: false
+}
+```
+
+2. Add container in HTML if new category
+
+### Theme Support
+
+CSS uses CSS variables for theming:
+```css
+:root[data-theme="dark"] {
+  --nexus-green: #00ff41;
+  --nexus-black: #0a0a0a;
+  /* ... */
+}
+
+:root[data-theme="light"] {
+  --nexus-green: #006b1a;
+  --nexus-black: #f5f5f0;
+  /* ... */
+}
+```
+
+## Testing
+
+No automated tests. Manual testing workflow:
+1. Test on desktop browsers (Chrome, Firefox)
+2. Test responsive design on mobile viewport
+3. Verify localStorage persistence
+4. Test import/export functionality
+
+## Deployment
+
+Static site hosted on GitHub Pages:
+- Branch: `main` (or configured GitHub Pages branch)
+- No build step required
+- `.nojekyll` file prevents Jekyll processing
+
+## Important Notes for AI Assistants
+
+1. **Russian UI:** All user-facing text should be in Russian
+2. **No Build System:** Pure vanilla JS, edit files directly
+3. **localStorage First:** All data persists in browser localStorage
+4. **Single HTML File:** All sections are in one index.html
+5. **Chart.js Date Format:** Use `dd.MM` (lowercase) for date-fns v2+ compatibility
+6. **Day Names:** Normalize day names (e.g., "вторник" → "Вторник")
+7. **Avoid Breaking Changes:** Many users may have existing localStorage data
+8. **Memory Leaks:** Destroy Chart.js instances before recreating
+9. **Dark Theme Default:** App defaults to dark (Pip-Boy) theme
