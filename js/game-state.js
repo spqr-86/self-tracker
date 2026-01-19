@@ -410,6 +410,159 @@ class GameStateManager {
     };
   }
 
+  /* =====================
+     SACRED COW - Священная корова
+     3-5 попыток/неделю сделать шаг к цели
+  ===================== */
+
+  /**
+   * Получить начало текущей недели (понедельник)
+   */
+  getWeekStart(date = new Date()) {
+    const d = new Date(date);
+    const day = d.getDay();
+    const diff = d.getDate() - day + (day === 0 ? -6 : 1); // Понедельник
+    d.setDate(diff);
+    d.setHours(0, 0, 0, 0);
+    return d.toISOString().split('T')[0];
+  }
+
+  /**
+   * Получить попытки священной коровы за текущую неделю
+   */
+  getSacredCowAttempts() {
+    const weekStart = this.getWeekStart();
+
+    if (!this.state.sacredCow) {
+      this.state.sacredCow = {};
+    }
+
+    if (!this.state.sacredCow[weekStart]) {
+      this.state.sacredCow[weekStart] = [];
+    }
+
+    return this.state.sacredCow[weekStart];
+  }
+
+  /**
+   * Получить количество попыток за текущую неделю
+   */
+  getSacredCowCount() {
+    return this.getSacredCowAttempts().length;
+  }
+
+  /**
+   * Добавить попытку священной коровы
+   */
+  addSacredCowAttempt(note = '') {
+    const weekStart = this.getWeekStart();
+
+    if (!this.state.sacredCow) {
+      this.state.sacredCow = {};
+    }
+
+    if (!this.state.sacredCow[weekStart]) {
+      this.state.sacredCow[weekStart] = [];
+    }
+
+    // Ограничение: максимум 7 попыток в неделю
+    if (this.state.sacredCow[weekStart].length >= 7) {
+      console.log('[GameState] Максимум попыток на неделю достигнут');
+      return false;
+    }
+
+    this.state.sacredCow[weekStart].push({
+      date: this.getTodayDate(),
+      timestamp: new Date().toISOString(),
+      note: note
+    });
+
+    // Очистка старых записей (старше 8 недель)
+    this.cleanOldSacredCowData();
+
+    if (this.save()) {
+      console.log('[GameState] Попытка священной коровы добавлена');
+
+      // Callback если есть
+      if (this.onSacredCowUpdate) {
+        this.onSacredCowUpdate(this.getSacredCowCount());
+      }
+
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * Удалить последнюю попытку (отмена)
+   */
+  removeSacredCowAttempt() {
+    const attempts = this.getSacredCowAttempts();
+
+    if (attempts.length === 0) {
+      return false;
+    }
+
+    attempts.pop();
+
+    if (this.save()) {
+      if (this.onSacredCowUpdate) {
+        this.onSacredCowUpdate(this.getSacredCowCount());
+      }
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * Очистка старых данных священной коровы
+   */
+  cleanOldSacredCowData() {
+    if (!this.state.sacredCow) return;
+
+    const eightWeeksAgo = new Date();
+    eightWeeksAgo.setDate(eightWeeksAgo.getDate() - 56);
+    const cutoff = this.getWeekStart(eightWeeksAgo);
+
+    Object.keys(this.state.sacredCow).forEach(weekStart => {
+      if (weekStart < cutoff) {
+        delete this.state.sacredCow[weekStart];
+      }
+    });
+  }
+
+  /**
+   * Получить статус священной коровы (для UI)
+   */
+  getSacredCowStatus() {
+    const count = this.getSacredCowCount();
+    const target = { min: 3, max: 5 };
+
+    let status = 'low'; // меньше 3
+    let message = 'Сделай попытку сегодня';
+
+    if (count >= target.min && count <= target.max) {
+      status = 'good'; // 3-5 - идеально
+      message = 'Отличный темп!';
+    } else if (count > target.max) {
+      status = 'high'; // больше 5 - перерабатываешь
+      message = 'Не перегружай себя';
+    } else if (count > 0) {
+      status = 'progress'; // 1-2 - в процессе
+      message = `Ещё ${target.min - count} до цели`;
+    }
+
+    return {
+      count,
+      target,
+      status,
+      message,
+      progress: Math.min(100, Math.round((count / target.max) * 100))
+    };
+  }
+
   /**
    * Экспорт состояния для бэкапа
    */

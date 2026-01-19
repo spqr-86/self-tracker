@@ -3091,6 +3091,115 @@ canvas {
   font-style: italic;
 }
 
+/* =====================
+   SACRED COW - Священная корова
+===================== */
+.sacred-cow {
+  margin-top: 16px;
+  padding: 16px;
+  background: var(--nexus-surface);
+  border: 1px solid var(--nexus-border);
+}
+
+.cow-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.cow-icon {
+  font-size: 20px;
+}
+
+.cow-title {
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: var(--nexus-text-dim);
+  flex-grow: 1;
+}
+
+.cow-count {
+  font-size: 16px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--nexus-green);
+}
+
+/* Прогресс-бар */
+.cow-progress {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.cow-segment {
+  flex: 1;
+  height: 8px;
+  background: var(--nexus-border);
+  transition: background 0.3s ease;
+}
+
+.cow-segment.target {
+  border-bottom: 2px solid var(--nexus-green-dim);
+}
+
+.cow-segment.filled {
+  background: var(--nexus-green);
+  box-shadow: 0 0 8px rgba(0, 255, 65, 0.4);
+}
+
+/* Статусы */
+.sacred-cow[data-status="low"] .cow-count {
+  color: var(--nexus-text-dim);
+}
+
+.sacred-cow[data-status="progress"] .cow-count {
+  color: var(--nexus-amber);
+}
+
+.sacred-cow[data-status="good"] .cow-count {
+  color: var(--nexus-green);
+}
+
+.sacred-cow[data-status="high"] .cow-count {
+  color: var(--nexus-amber);
+}
+
+/* Футер */
+.cow-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cow-message {
+  font-size: 12px;
+  color: var(--nexus-text-dim);
+  font-style: italic;
+}
+
+.cow-add-btn {
+  padding: 6px 16px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  background: transparent;
+  border: 1px solid var(--nexus-green);
+  color: var(--nexus-green);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.cow-add-btn:hover {
+  background: var(--nexus-green);
+  color: var(--nexus-black);
+}
+
+.cow-add-btn:active {
+  transform: scale(0.95);
+}
+
 /* Mobile */
 @media (max-width: 768px) {
   .mode-widget-tasks {
