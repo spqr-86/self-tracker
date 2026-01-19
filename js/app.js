@@ -1506,6 +1506,7 @@ function renderModeWidget() {
 function renderNormModeWidget(container, config) {
   const recentModes = gameState.getRecentModes(7);
   const stats = gameState.getModeStats(30);
+  const sacredCow = gameState.getSacredCowStatus();
   const todayStr = new Date().toISOString().split('T')[0];
 
   // Задачи для режима Норма
@@ -1525,6 +1526,13 @@ function renderNormModeWidget(container, config) {
         <span class="day-icon" style="color: ${dayConfig.color}">${dayConfig.icon}</span>
       </div>
     `;
+  }).join('');
+
+  // Прогресс-бар священной коровы (5 сегментов)
+  const cowSegments = Array(5).fill(0).map((_, i) => {
+    const filled = i < sacredCow.count;
+    const isTarget = i >= 2 && i < 5; // 3-5 попыток - целевая зона
+    return `<div class="cow-segment ${filled ? 'filled' : ''} ${isTarget ? 'target' : ''}"></div>`;
   }).join('');
 
   container.innerHTML = `
@@ -1557,6 +1565,22 @@ function renderNormModeWidget(container, config) {
         </div>
       </div>
 
+      <!-- Священная корова -->
+      <div class="sacred-cow" data-status="${sacredCow.status}">
+        <div class="cow-header">
+          <span class="cow-icon">🐄</span>
+          <span class="cow-title">СВЯЩЕННАЯ КОРОВА</span>
+          <span class="cow-count">${sacredCow.count}/${sacredCow.target.max}</span>
+        </div>
+        <div class="cow-progress">
+          ${cowSegments}
+        </div>
+        <div class="cow-footer">
+          <span class="cow-message">${sacredCow.message}</span>
+          <button class="cow-add-btn" onclick="addSacredCowAttempt()" title="Отметить попытку">+1</button>
+        </div>
+      </div>
+
       <!-- Статистика за 30 дней -->
       <div class="mode-widget-stats">
         <div class="stats-item norm">
@@ -1574,6 +1598,20 @@ function renderNormModeWidget(container, config) {
       </div>
     </div>
   `;
+}
+
+/**
+ * Добавить попытку священной коровы
+ */
+function addSacredCowAttempt() {
+  if (typeof gameState === 'undefined') return;
+
+  if (gameState.addSacredCowAttempt()) {
+    renderModeWidget();
+    ui.showSuccess('🐄 Попытка засчитана!');
+  } else {
+    ui.showInfo('Максимум 7 попыток в неделю');
+  }
 }
 
 /**
