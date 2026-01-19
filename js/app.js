@@ -1217,6 +1217,9 @@ function initializeDates() {
 document.addEventListener('DOMContentLoaded', () => {
   console.log('[App] DOMContentLoaded - начало инициализации');
 
+  // Инициализация системы режимов (v3.0)
+  initModeSystem();
+
   // Инициализация Personal Code системы ПЕРЕД renderAll
   console.log('[App] Создание PersonalCodeManager...');
   personalCodeManager = new PersonalCodeManager();
@@ -1289,6 +1292,233 @@ function initTheme() {
 
 // Call initTheme before DOMContentLoaded
 initTheme();
+
+/* =========================
+   MODE SYSTEM (v3.0)
+========================= */
+
+/**
+ * Показать модалку выбора режима
+ */
+function showModeModal() {
+  const modal = document.getElementById('mode-modal');
+  if (!modal) return;
+
+  // Обновить активный режим в опциях
+  updateModeOptionsUI();
+
+  // Обновить историю режимов
+  updateModeHistoryUI();
+
+  modal.style.display = 'flex';
+}
+
+/**
+ * Закрыть модалку режимов
+ */
+function closeModeModal() {
+  const modal = document.getElementById('mode-modal');
+  if (modal) {
+    modal.style.display = 'none';
+  }
+}
+
+/**
+ * Выбрать режим
+ */
+function selectMode(mode) {
+  if (typeof gameState === 'undefined') {
+    console.error('[App] gameState не инициализирован');
+    return;
+  }
+
+  if (gameState.setMode(mode)) {
+    updateModeIndicator();
+    updateModeOptionsUI();
+    closeModeModal();
+    ui.showSuccess('Режим изменён: ' + gameState.getModeConfig(mode).name);
+
+    // Проверить сигналы
+    checkModeSignals();
+  }
+}
+
+/**
+ * Выбрать режим и закрыть приветственную модалку
+ */
+function selectModeAndClose(mode) {
+  selectMode(mode);
+  closeWelcomeBackModal();
+}
+
+/**
+ * Закрыть приветственную модалку
+ */
+function closeWelcomeBackModal() {
+  const modal = document.getElementById('welcome-back-modal');
+  if (modal) {
+    modal.style.display = 'none';
+  }
+}
+
+/**
+ * Обновить индикатор режима в хедере
+ */
+function updateModeIndicator() {
+  if (typeof gameState === 'undefined') return;
+
+  const indicator = document.getElementById('mode-indicator');
+  const icon = document.getElementById('mode-icon');
+  const label = document.getElementById('mode-label');
+
+  if (!indicator) return;
+
+  const mode = gameState.getMode();
+  const config = gameState.getModeConfig(mode);
+
+  indicator.setAttribute('data-mode', mode);
+
+  if (icon) {
+    icon.textContent = config.icon;
+    icon.style.color = config.color;
+  }
+
+  if (label) {
+    label.textContent = config.name.toUpperCase();
+  }
+}
+
+/**
+ * Обновить UI опций режимов в модалке
+ */
+function updateModeOptionsUI() {
+  if (typeof gameState === 'undefined') return;
+
+  const currentMode = gameState.getMode();
+  const options = document.querySelectorAll('.mode-option');
+
+  options.forEach(option => {
+    const mode = option.getAttribute('data-mode');
+    if (mode === currentMode) {
+      option.classList.add('active');
+    } else {
+      option.classList.remove('active');
+    }
+  });
+}
+
+/**
+ * Обновить историю режимов в модалке
+ */
+function updateModeHistoryUI() {
+  if (typeof gameState === 'undefined') return;
+
+  const container = document.getElementById('mode-history-days');
+  if (!container) return;
+
+  const recentModes = gameState.getRecentModes(7);
+  const todayStr = new Date().toISOString().split('T')[0];
+
+  container.innerHTML = recentModes.map(day => {
+    const config = gameState.getModeConfig(day.mode);
+    const isToday = day.date === todayStr;
+
+    return `
+      <div class="mode-day ${isToday ? 'today' : ''}" data-mode="${day.mode}">
+        <span class="mode-day-name">${day.dayName}</span>
+        <span class="mode-day-icon">${config.icon}</span>
+      </div>
+    `;
+  }).join('');
+}
+
+/**
+ * Показать приветственную модалку (если нужно)
+ */
+function showWelcomeBackIfNeeded() {
+  if (typeof gameState === 'undefined') return;
+
+  const welcomeData = gameState.getWelcomeBackData();
+  if (!welcomeData) return;
+
+  const modal = document.getElementById('welcome-back-modal');
+  const message = document.getElementById('welcome-back-message');
+
+  if (!modal) return;
+
+  if (message) {
+    message.textContent = `Прошло ${welcomeData.daysAway} дней с последнего визита.`;
+  }
+
+  modal.style.display = 'flex';
+}
+
+/**
+ * Проверить и показать сигналы режимов
+ */
+function checkModeSignals() {
+  if (typeof gameState === 'undefined') return;
+
+  const signals = gameState.checkSignals();
+
+  signals.forEach(signal => {
+    if (signal.type === 'alert') {
+      // Важный сигнал — показать как уведомление
+      ui.showWarning(signal.message);
+    } else if (signal.type === 'warning') {
+      ui.showInfo(signal.message);
+    }
+    // info сигналы можно логировать или показывать позже
+    console.log('[Mode Signal]', signal);
+  });
+}
+
+/**
+ * Инициализация системы режимов
+ */
+function initModeSystem() {
+  console.log('[App] Инициализация системы режимов...');
+
+  if (typeof gameState === 'undefined') {
+    console.error('[App] gameState не найден!');
+    return;
+  }
+
+  // Обновить индикатор
+  updateModeIndicator();
+
+  // Привязать callback на изменение режима
+  gameState.onModeChange = (newMode, oldMode) => {
+    console.log(`[App] Режим изменён: ${oldMode} → ${newMode}`);
+    updateModeIndicator();
+  };
+
+  // Показать приветственную модалку если нужно
+  setTimeout(() => {
+    showWelcomeBackIfNeeded();
+  }, 500);
+
+  // Проверить сигналы
+  checkModeSignals();
+
+  console.log('[App] Система режимов инициализирована');
+}
+
+// Закрытие модалок по клику на overlay
+document.addEventListener('click', (e) => {
+  if (e.target.classList.contains('modal-overlay')) {
+    e.target.style.display = 'none';
+  }
+});
+
+// Закрытие модалок по Escape
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay').forEach(modal => {
+      modal.style.display = 'none';
+    });
+  }
+});
 
 /* =========================
    PERSONAL CODE TEXT
