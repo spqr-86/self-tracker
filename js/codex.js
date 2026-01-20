@@ -5,6 +5,118 @@
 
 let isReadingMode = false;
 let isPreviewMode = false;
+let codexSections = [];
+let activeCodexSection = 0;
+
+/**
+ * Парсинг секций из markdown текста
+ * Ищет заголовки # (h1) и создаёт массив секций
+ */
+function parseCodexSections(text) {
+  const lines = text.split('\n');
+  const sections = [];
+  let currentSection = null;
+
+  lines.forEach((line, index) => {
+    // Ищем заголовки первого уровня: # Заголовок
+    const h1Match = line.match(/^#\s+(.+)$/);
+
+    if (h1Match) {
+      // Сохраняем предыдущую секцию
+      if (currentSection) {
+        sections.push(currentSection);
+      }
+      // Начинаем новую секцию
+      currentSection = {
+        title: h1Match[1].trim(),
+        startLine: index,
+        content: line
+      };
+    } else if (currentSection) {
+      currentSection.content += '\n' + line;
+    } else {
+      // Контент до первого заголовка - создаём секцию "Введение"
+      if (!currentSection && line.trim()) {
+        currentSection = {
+          title: 'НАЧАЛО',
+          startLine: 0,
+          content: line
+        };
+      } else if (currentSection) {
+        currentSection.content += '\n' + line;
+      }
+    }
+  });
+
+  // Добавляем последнюю секцию
+  if (currentSection) {
+    sections.push(currentSection);
+  }
+
+  return sections;
+}
+
+/**
+ * Рендеринг табов из секций
+ */
+function renderCodexTabs() {
+  const tabsContainer = document.getElementById('codex-tabs');
+  if (!tabsContainer) return;
+
+  const textarea = document.getElementById('personal-code-text');
+  const text = textarea ? textarea.value : '';
+
+  codexSections = parseCodexSections(text);
+
+  // Если меньше 2 секций — не показываем табы
+  if (codexSections.length < 2) {
+    tabsContainer.style.display = 'none';
+    return;
+  }
+
+  // Генерируем табы
+  tabsContainer.innerHTML = codexSections.map((section, index) => `
+    <button
+      class="codex-tab ${index === activeCodexSection ? 'active' : ''}"
+      onclick="navigateToCodexSection(${index})"
+      title="${section.title}"
+    >
+      ${section.title.length > 15 ? section.title.substring(0, 15) + '…' : section.title}
+    </button>
+  `).join('');
+
+  tabsContainer.style.display = 'flex';
+}
+
+/**
+ * Навигация к секции
+ */
+function navigateToCodexSection(index) {
+  if (index < 0 || index >= codexSections.length) return;
+
+  activeCodexSection = index;
+
+  // Обновляем активный таб
+  const tabs = document.querySelectorAll('.codex-tab');
+  tabs.forEach((tab, i) => {
+    tab.classList.toggle('active', i === index);
+  });
+
+  const preview = document.getElementById('personal-code-preview');
+  if (!preview || !isPreviewMode) return;
+
+  // Ищем соответствующий h1 в превью и скроллим к нему
+  const headers = preview.querySelectorAll('h1');
+  if (headers[index]) {
+    headers[index].scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    // Подсветка секции на момент
+    headers[index].classList.add('codex-highlight');
+    setTimeout(() => {
+      headers[index].classList.remove('codex-highlight');
+    }, 1500);
+  }
+}
 
 /**
  * Toggle Reading Mode - улучшенная читаемость
@@ -36,12 +148,16 @@ function togglePreviewMode() {
   const preview = document.getElementById('personal-code-preview');
   const btn = document.getElementById('preview-mode-btn');
   const indicator = document.getElementById('codex-mode-indicator');
+  const tabsContainer = document.getElementById('codex-tabs');
 
   if (isPreviewMode) {
     // Render Markdown
     const text = textarea.value || '';
     const html = marked.parse(text);
     preview.innerHTML = html;
+
+    // Рендерим табы
+    renderCodexTabs();
 
     // Switch display
     textarea.style.display = 'none';
@@ -56,6 +172,11 @@ function togglePreviewMode() {
     // Switch back to edit
     textarea.style.display = 'block';
     preview.style.display = 'none';
+
+    // Скрываем табы в режиме редактирования
+    if (tabsContainer) {
+      tabsContainer.style.display = 'none';
+    }
 
     // Update UI
     btn.classList.remove('active');
