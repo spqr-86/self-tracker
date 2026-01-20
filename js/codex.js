@@ -105,15 +105,27 @@ function navigateToCodexSection(index) {
   const preview = document.getElementById('personal-code-preview');
   if (!preview || !isPreviewMode) return;
 
-  // Ищем соответствующий h1 в превью и скроллим к нему
+  // Проверяем, есть ли секция "НАЧАЛО" (контент до первого h1)
+  const hasIntroSection = codexSections.length > 0 && codexSections[0].title === 'НАЧАЛО';
+
+  // Если первая секция — скроллим к началу
+  if (index === 0) {
+    preview.scrollTo({ top: 0, behavior: 'smooth' });
+    return;
+  }
+
+  // Ищем соответствующий h1 в превью
+  // Если есть intro секция, индекс h1 = index - 1
   const headers = preview.querySelectorAll('h1');
-  if (headers[index]) {
-    headers[index].scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const headerIndex = hasIntroSection ? index - 1 : index;
+
+  if (headers[headerIndex]) {
+    headers[headerIndex].scrollIntoView({ behavior: 'smooth', block: 'start' });
 
     // Подсветка секции на момент
-    headers[index].classList.add('codex-highlight');
+    headers[headerIndex].classList.add('codex-highlight');
     setTimeout(() => {
-      headers[index].classList.remove('codex-highlight');
+      headers[headerIndex].classList.remove('codex-highlight');
     }, 1500);
   }
 }
