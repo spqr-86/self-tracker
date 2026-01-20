@@ -3232,3 +3232,101 @@ canvas {
     flex-wrap: wrap;
   }
 }
+
+/* =====================
+   CODEX TABS - Навигация по разделам
+===================== */
+.codex-tabs {
+  display: flex;
+  gap: 4px;
+  background: #001a00;
+  border: 2px solid #00ff00;
+  border-top: none;
+  border-bottom: none;
+  padding: 8px 16px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #00ff00 #001a00;
+}
+
+.codex-tabs::-webkit-scrollbar {
+  height: 4px;
+}
+
+.codex-tabs::-webkit-scrollbar-track {
+  background: #001a00;
+}
+
+.codex-tabs::-webkit-scrollbar-thumb {
+  background: #00ff0060;
+  border-radius: 2px;
+}
+
+.codex-tab {
+  padding: 6px 12px;
+  background: transparent;
+  border: 1px solid #00ff0040;
+  color: #00ff0080;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.codex-tab:hover {
+  border-color: #00ff00;
+  color: #00ff00;
+  background: #003300;
+}
+
+.codex-tab.active {
+  background: #00ff00;
+  color: #001a00;
+  border-color: #00ff00;
+  font-weight: 700;
+}
+
+/* Подсветка секции при навигации */
+.codex-highlight {
+  animation: codex-flash 1.5s ease-out;
+}
+
+@keyframes codex-flash {
+  0% {
+    background: #00ff0040;
+    box-shadow: 0 0 20px #00ff00;
+  }
+  100% {
+    background: transparent;
+    box-shadow: none;
+  }
+}
+
+/* Стили для превью h1 заголовков */
+#personal-code-preview h1 {
+  padding-top: 16px;
+  margin-top: 24px;
+  border-top: 1px solid #00ff0030;
+  scroll-margin-top: 16px;
+}
+
+#personal-code-preview h1:first-child {
+  margin-top: 0;
+  border-top: none;
+  padding-top: 0;
+}
+
+/* Mobile: горизонтальный скролл табов */
+@media (max-width: 768px) {
+  .codex-tabs {
+    padding: 6px 12px;
+  }
+
+  .codex-tab {
+    padding: 4px 10px;
+    font-size: 10px;
+  }
+}

@@ -1504,10 +1504,8 @@ function renderModeWidget() {
  * Рендеринг полного виджета для режима NORM
  */
 function renderNormModeWidget(container, config) {
-  const recentModes = gameState.getRecentModes(7);
   const stats = gameState.getModeStats(30);
   const sacredCow = gameState.getSacredCowStatus();
-  const todayStr = new Date().toISOString().split('T')[0];
 
   // Задачи для режима Норма
   const normTasks = [
@@ -1515,18 +1513,6 @@ function renderNormModeWidget(container, config) {
     { icon: '◉', text: 'Шаг к делу (работа/учеба/проект)', done: false },
     { icon: '◉', text: 'Движение (тренировка/прогулка)', done: false }
   ];
-
-  // Генерируем HTML для недельной истории
-  const weekHtml = recentModes.map(day => {
-    const dayConfig = gameState.getModeConfig(day.mode);
-    const isToday = day.date === todayStr;
-    return `
-      <div class="mode-week-day ${isToday ? 'today' : ''}" data-mode="${day.mode}" title="${day.date}">
-        <span class="day-label">${day.dayName}</span>
-        <span class="day-icon" style="color: ${dayConfig.color}">${dayConfig.icon}</span>
-      </div>
-    `;
-  }).join('');
 
   // Прогресс-бар священной коровы (5 сегментов)
   const cowSegments = Array(5).fill(0).map((_, i) => {
@@ -1555,14 +1541,6 @@ function renderNormModeWidget(container, config) {
             <span class="task-text">${task.text}</span>
           </div>
         `).join('')}
-      </div>
-
-      <!-- История недели -->
-      <div class="mode-widget-week">
-        <div class="week-label">НЕДЕЛЯ:</div>
-        <div class="week-days">
-          ${weekHtml}
-        </div>
       </div>
 
       <!-- Священная корова -->

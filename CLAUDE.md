@@ -4,9 +4,21 @@
 
 **NEXUS OS** is a personal life operating system / self-tracker web application with RPG gamification elements. It's designed as a single-page application (SPA) that helps users track various aspects of their life including workouts, meditation, coding sessions, goals, weight, and psychological assessments.
 
-**Version:** 2.2.0
+**Version:** 3.0.0
 **Language:** Russian (primary UI language)
 **Design Theme:** Pip-Boy / Fallout-inspired terminal aesthetic
+
+### Game System v3.0
+
+The app uses a **Mode System** for adaptive self-management:
+
+| Mode | Symbol | When to Use |
+|------|--------|-------------|
+| **НОРМА** (Norm) | ▓ | Default state, full productivity |
+| **МИНИМУМ** (Minimum) | ░ | Low energy, reduced expectations |
+| **КРИЗИС** (Crisis) | ▒ | Emergency, survival mode |
+
+**Sacred Cow (Священная корова):** 3-5 weekly attempts toward goals, tracked on dashboard.
 
 ## Architecture
 
@@ -25,10 +37,12 @@ self-tracker/
 │   ├── storage.js      # StorageManager - localStorage abstraction
 │   ├── ui.js           # UIManager - notifications, UI helpers
 │   ├── stats.js        # StatsManager - RPG stats system (STR/PER/INT/WIL)
+│   ├── game-state.js   # GameStateManager - mode system & sacred cow
 │   ├── personal-code.js # PersonalCodeManager - perks system
 │   ├── weight.js       # Weight tracking with charts
 │   ├── phq15.js        # Depression screening test (PHQ-15 based)
-│   └── codex.js        # Personal codex with Markdown support
+│   └── codex.js        # Personal codex with Markdown + tab navigation
+├── CODEX.md            # Personal codex template (minimal Fallout style)
 └── README.md
 ```
 
@@ -39,22 +53,25 @@ self-tracker/
 | `storage.js` | `StorageManager` → `storage` | Data persistence via localStorage |
 | `ui.js` | `UIManager` → `ui` | Notifications, form helpers, date formatting |
 | `stats.js` | `StatsManager` → `statsManager` | RPG character stats and XP progression |
+| `game-state.js` | `GameStateManager` → `gameState` | Mode system, sacred cow, daily tracking |
 | `personal-code.js` | `PersonalCodeManager` → `personalCodeManager` | Perk tree system |
 | `app.js` | Global functions | Main app logic, CRUD operations, rendering |
 | `weight.js` | Global functions | Weight tracking module |
 | `phq15.js` | Global functions | Psychological test module |
-| `codex.js` | Global functions | Personal codex with Markdown |
+| `codex.js` | Global functions | Codex with Markdown + auto-tab navigation |
 
 ### Module Initialization Order
 
 1. `storage.js` - Creates `storage` singleton (loads data immediately)
 2. `ui.js` - Creates `ui` singleton
 3. `stats.js` - Creates `statsManager` singleton
-4. `personal-code.js` - Defines `PersonalCodeManager` class
-5. `app.js` - On DOMContentLoaded:
+4. `game-state.js` - Creates `gameState` singleton (loads mode state)
+5. `personal-code.js` - Defines `PersonalCodeManager` class
+6. `app.js` - On DOMContentLoaded:
    - Creates `personalCodeManager` instance
    - Calls `initializeDates()`
    - Calls `renderAll()`
+   - Calls `initModeSystem()` - mode widget, indicators
    - Updates perk UI
 
 ## Data Storage
@@ -78,6 +95,7 @@ self-tracker/
 | `nexusPersonalCodeText` | String | Personal codex markdown text |
 | `nexusTheme` | String | Theme preference ('dark'/'light') |
 | `codexReadingMode` | String | Reading mode state |
+| `nexusGameState` | Object | Mode system state (mode, history, sacredCow) |
 
 ### Data Object Schemas
 
@@ -130,6 +148,23 @@ self-tracker/
   INT: { value: Number, xp: Number },
   WIL: { value: Number, xp: Number }
 }
+
+// Game state structure
+{
+  currentMode: "norm" | "minimum" | "crisis",
+  modeHistory: [{
+    mode: String,
+    date: "YYYY-MM-DD",
+    timestamp: ISO String
+  }],
+  sacredCow: {
+    "YYYY-MM-DD": [{           // Week start (Monday)
+      date: "YYYY-MM-DD",
+      timestamp: ISO String,
+      note: String
+    }]
+  }
+}
 ```
 
 ## RPG Stats System
@@ -159,6 +194,51 @@ The app uses 4 primary stats (Fallout-inspired):
 | HYBRID | Гибридные | Multiple stats |
 
 Perks provide bonuses like XP multipliers, unlock features, etc.
+
+## Mode System (Game v3.0)
+
+The mode system provides adaptive self-management with three states:
+
+### Mode Configurations
+
+| Mode | Key | Color | Description |
+|------|-----|-------|-------------|
+| НОРМА | `norm` | Green | Full productivity, all tasks |
+| МИНИМУМ | `minimum` | Amber | Reduced load, basic maintenance |
+| КРИЗИС | `crisis` | Red | Survival mode, minimal expectations |
+
+### Key Functions (game-state.js)
+
+```javascript
+gameState.getMode()              // Current mode: 'norm'|'minimum'|'crisis'
+gameState.setMode(mode, reason)  // Change mode with optional reason
+gameState.getModeConfig(mode)    // Get mode configuration (color, tasks, etc.)
+gameState.getModeStats(days)     // Stats for last N days by mode
+
+// Sacred Cow
+gameState.getSacredCowStatus()   // {count, target, status, message, progress}
+gameState.addSacredCowAttempt()  // Add weekly attempt (max 7)
+gameState.getSacredCowCount()    // Current week's attempt count
+```
+
+### Mode Widget (Dashboard)
+
+The dashboard displays an adaptive mode widget:
+- **NORM mode:** Full widget with daily tasks + Sacred Cow progress + 30-day stats
+- **MINIMUM/CRISIS:** Minimal widget with simplified tasks and support message
+
+## Codex Tab Navigation
+
+The codex module auto-generates navigation tabs from `#` (h1) headers in markdown:
+
+```javascript
+// codex.js
+parseCodexSections(text)     // Parse markdown into sections by # headers
+renderCodexTabs()            // Generate tab buttons (shown if 2+ sections)
+navigateToCodexSection(idx)  // Scroll to section and highlight
+```
+
+Tabs appear only in Preview mode when there are 2+ sections.
 
 ## UI Sections
 
@@ -333,3 +413,5 @@ Static site hosted on GitHub Pages:
 7. **Avoid Breaking Changes:** Many users may have existing localStorage data
 8. **Memory Leaks:** Destroy Chart.js instances before recreating
 9. **Dark Theme Default:** App defaults to dark (Pip-Boy) theme
+10. **Mode System:** Use mode symbols (▓ ░ ▒) consistently for Norm/Minimum/Crisis
+11. **Codex Styling:** CODEX.md uses minimal Fallout style - no heavy ASCII art
